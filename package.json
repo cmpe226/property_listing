@@ -1,0 +1,19 @@
+{
+  "name": "WorkforceManagementSystem",
+  "version": "0.0.1",
+  "private": true,
+  "scripts": {
+    "start": "node app.js"
+  },
+  "dependencies": {
+    "express": "3.2.6",
+    "ejs": "*",
+    "express-session": "*",
+    "amqp": "*",
+    "chance": "*",
+    "mysql": "*",
+    "cors": "2.6.0",
+    "squel": "*"
+  },
+  "main": "app.js"
+}
