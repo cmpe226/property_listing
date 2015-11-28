@@ -9,7 +9,8 @@ var session = require('express-session');
 var auth = require('./routes/auth');
 
 var app = express();
-var pages = require('./routes/pages')
+var pages = require('./routes/pages');
+var controller = require('./routes/controller');
 
 // all environments
 app.set('port', process.env.PORT || 3000);
@@ -45,6 +46,8 @@ app.get('/user', user.getUserById);
 
 // POSTS
 app.post('/user', user.createUser);
+
+app.post('/doAddProperty', controller.doAddProperty);
 
 // DELETES
 // app.delete('/user/:userid', user.deleteRegisteredUser);
