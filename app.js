@@ -11,6 +11,7 @@ var auth = require('./routes/auth');
 var app = express();
 var pages = require('./routes/pages');
 var controller = require('./routes/controller');
+var connection = require('./routes/mysql')
 
 // all environments
 app.set('port', process.env.PORT || 3000);
@@ -39,6 +40,16 @@ app.use(session({
 if ('development' == app.get('env')) {
 	app.use(express.errorHandler());
 }
+
+var conn = connection.getConnection;
+
+conn.connect(function(err){
+	  if(err){
+	    console.log('Error connecting to Db: ' + err);
+	    return;
+	  }
+	  console.log('Connection established');
+	});
 
 // GETS
 app.get('/user', user.getUserById);
