@@ -52,6 +52,7 @@ app.post('/user', user.createUser);
 app.get('/signup', pages.signup);
 app.get('/propertydetails', pages.propertydetails);
 app.get('/listing', pages.listing);
+app.get('/addproperty', pages.addproperty);
 
 app.use('/', routes.index);
 app.use('/login', auth.login);
