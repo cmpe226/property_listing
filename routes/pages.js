@@ -13,3 +13,9 @@ exports.propertydetails = function(req, res) {
 		title : 'Express'
 	});
 };
+
+exports.listing = function(req, res) {
+	res.render('listing.html', {
+		title : 'Express'
+	});
+};
