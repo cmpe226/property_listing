@@ -2,19 +2,14 @@
  * Module dependencies.
  */
 
-var express = require('express')
-    , routes = require('./routes')
-    , user = require('./routes/user')
-    , usermysql = require('./routes/user-mysql')
-    , http = require('http')
-    , path = require('path')
-    , mysql = require('mysql');
+var express = require('express'), routes = require('./routes'), user = require('./routes/user'), usermysql = require('./routes/user-mysql'), http = require('http'), path = require('path'), mysql = require('mysql');
 
 var cors = require('cors');
 var session = require('express-session');
 var auth = require('./routes/auth');
 
 var app = express();
+var pages = require('./routes/pages')
 
 // all environments
 app.set('port', process.env.PORT || 3000);
@@ -32,33 +27,35 @@ app.use(express.methodOverride());
 app.use(app.router);
 app.use(express.static(path.join(__dirname, 'public')));
 app.use(session({
-    secret: 'CMPE226',
-    resave: false,
-    saveUninitialized: true//,
-    //cookie: { maxAge: 15 * 60 * 1000 }
+	secret : 'CMPE226',
+	resave : false,
+	saveUninitialized : true
+// ,
+// cookie: { maxAge: 15 * 60 * 1000 }
 }));
 
 // development only
 if ('development' == app.get('env')) {
-    app.use(express.errorHandler());
+	app.use(express.errorHandler());
 }
 
-//GETS
+// GETS
 app.get('/user', user.getUserById);
-//app.get('/users', user.getAllUsers);
+// app.get('/users', user.getAllUsers);
 
-//POSTS
+// POSTS
 app.post('/user', user.createUser);
 
-//DELETES
-//app.delete('/user/:userid', user.deleteRegisteredUser);
+// DELETES
+// app.delete('/user/:userid', user.deleteRegisteredUser);
 
+app.get('/signup', pages.signup);
+app.get('/propertydetails', pages.propertydetails);
 
 app.use('/', routes.index);
 app.use('/login', auth.login);
 app.use('/register', auth.register);
 
-
-http.createServer(app).listen(app.get('port'), app.get('ip'), function () {
-    console.log('Express server listening on port ' + app.get('port'));
+http.createServer(app).listen(app.get('port'), app.get('ip'), function() {
+	console.log('Express server listening on port ' + app.get('port'));
 });
