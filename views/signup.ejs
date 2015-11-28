@@ -22,6 +22,12 @@
 <body>
 	<div align="center">
 		<div class="container">
+
+			<%if (locals.accountCreated) {%>
+				<div class="alert alert-success">
+					<strong>Success!</strong> Your account has been created.
+				</div>
+			<%}%>
 			<div id="loginbox" style="margin-top: 50px;"
 				class="mainbox col-md-6 col-md-offset-3 col-sm-8 col-sm-offset-2">
 				<div class="panel panel-info">
@@ -102,7 +108,7 @@
 						</div>
 					</div>
 					<div class="panel-body">
-						<form id="signupform" class="form-horizontal" role="form">
+						<form id="signupform" class="form-horizontal" role="form" action="user" method="POST">
 
 							<div id="signupalert" style="display: none"
 								class="alert alert-danger">
@@ -140,7 +146,7 @@
 							<div class="form-group">
 								<label for="password" class="col-md-3 control-label">Password</label>
 								<div class="col-md-9">
-									<input type="password" class="form-control" name="passwd"
+									<input type="password" class="form-control" name="password"
 										placeholder="Password">
 								</div>
 							</div>
@@ -183,4 +189,10 @@
 	</div>
 
 </body>
+
+<script>
+	$('#btn-signup').click(function() {
+		$('#signupform').submit();
+	});
+</script>
 </html>

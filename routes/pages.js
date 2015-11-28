@@ -4,7 +4,7 @@
 
 var propertyDAO = require('./property_dao');
 exports.signup = function(req, res) {
-	res.render('signup.html', {
+	res.render('signup.ejs', {
 		title : 'Express'
 	});
 };

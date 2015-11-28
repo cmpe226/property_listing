@@ -1,7 +1,5 @@
 var ejs = require('ejs');
-var mysql = require('./user-mysql');
-
-var CLIENT_TABLE= 'user';
+var mysql = require('./user-dao');
 var ERROR_MESSAGE = {
     "message" : "Error occurred",
     "success" : false,
@@ -11,36 +9,66 @@ var ERROR_MESSAGE = {
 function createUser(req,res) {
 	if(verifyCreateParameters(req) == true) {
 		var newUser = {
-			username: req.body.username,
-			password: req.body.password
+			UserName: req.body.username,
+			Password: req.body.password,
 		};
-		mysql.insertNewRegisteredUser(function(err, results) {
+		var newUserProfile =  {
+			FirstName: req.body.firstname,
+			LastName: req.body.lastname
+		};
+
+		var realEstateUser = false;
+		if(typeof req.body.license != 'undefined' && req.body.license.length > 1 ) {
+			newUser.LicenseNumber = req.body.license;
+			realEstateUser = true;
+		}
+
+		mysql.insertNewProfile(function(err,results) {
 			if(err) {
 				throw err;
 			} else {
-				res.render('index',{username:newUser.username});
+				newUser.ProfileID = results.insertId;
+				if(realEstateUser) {
+					mysql.insertNewRealEstateAgent(function(err, results) {
+						if(err) {
+							throw err;
+						} else {
+							res.render('signup',{accountCreated:true});
+						}
+					},newUser);
+				} else {
+					mysql.insertNewRegisteredUser(function(err, results) {
+						if(err) {
+							throw err;
+						} else {
+							res.render('signup',{accountCreated:true});
+						}
+					},newUser);
+				}
 			}
-		},newUser);
+		},newUserProfile);
+
+
 	} else {
 		res.render('index', ERROR_MESSAGE);
 	}
 }
 
 function getUserById(req,res) {
-	if(req.params.id !== 'undefined') {
-		mysql.getUserById(req.params.id, function(err,results) {
+	if(req.params.userid !== 'undefined') {
+		mysql.getUserById(req.params.userid, function(err,results) {
 			if(err) {
 				throw err;
 			} else {
 				var user = results[0];
 				res.send({
-					id: user.userid,
+					userid: user.userid,
 					username: user.username
 				});
 			}
 		});
 	} else {
-		res.render('index', ERROR_MESSAGE);
+		res.send(ERROR_MESSAGE);
 	}
 }
 
@@ -73,7 +101,9 @@ function getAllUsers(req,res) {
 
 
 function verifyCreateParameters(req) {
-	if (typeof req.body.username !== 'undefined' && req.body.username.length > 2) {
+	if (typeof req.body.username !== 'undefined' && req.body.username.length > 2 &&
+		typeof req.body.firstname !== 'undefined' && req.body.firstname.length > 2 &&
+		typeof req.body.lastname !== 'undefined' && req.body.lastname.length > 2) {
 		return true;
 	} else {
 		return false;

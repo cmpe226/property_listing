@@ -2,7 +2,7 @@
  * Module dependencies.
  */
 
-var express = require('express'), routes = require('./routes'), user = require('./routes/user'), usermysql = require('./routes/user-mysql'), http = require('http'), path = require('path'), mysql = require('mysql');
+var express = require('express'), routes = require('./routes'), user = require('./routes/user'), usermysql = require('./routes/user-dao'), http = require('http'), path = require('path'), mysql = require('mysql');
 
 var cors = require('cors');
 var session = require('express-session');
@@ -52,7 +52,7 @@ conn.connect(function(err){
 	});
 
 // GETS
-app.get('/user', user.getUserById);
+app.get('/user/:userid', user.getUserById);
 // app.get('/users', user.getAllUsers);
 
 // POSTS
@@ -63,7 +63,7 @@ app.post('/doAddProperty', controller.doAddProperty);
 // DELETES
 // app.delete('/user/:userid', user.deleteRegisteredUser);
 
-app.get('/signup', pages.signup);
+app.get('/', pages.signup);
 app.get('/propertydetails', pages.propertydetails);
 app.get('/listing', pages.listing);
 app.get('/addproperty', pages.addproperty);
