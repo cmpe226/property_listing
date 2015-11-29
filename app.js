@@ -8,7 +8,6 @@ var express = require('express'), routes = require('./routes'), user = require('
 
 var cors = require('cors');
 var session = require('express-session');
-var auth = require('./routes/auth');
 
 var app = express();
 var pages = require('./routes/pages');
@@ -67,15 +66,14 @@ app.post('/doAddProperty', controller.doAddProperty);
 
 // DELETES
 // app.delete('/user/:userid', user.deleteRegisteredUser);
-
 app.post('/login', user.login);
-//app.use('/register', auth.register);
 
 app.get('/', pages.signup);
 app.get('/propertydetails', pages.propertydetails);
 app.get('/listing', pages.listing);
 app.get('/addproperty',authenticate, pages.addproperty);
 app.get('/properties', pages.getProperties);
+
 
 
 //CHANGE THIS TO TRUE WHEN WE DEMO! - This does the authentication
