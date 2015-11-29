@@ -83,12 +83,9 @@ function insertNewPropertyOwnerSP(callback,fullUserData) {
 }
 
 function getUserById(id,callback) {
-	var query = 'select user.userid, user.username ' +
-				'from ' + CLIENT_TABLE + ' user ' +
-				'where user.userid  = ' + id;
-	console.log(query);
-	var connection = getConnection();
-	connection.query(query,function(err,results) {
+	var query = "select * from allusers where id = ?";
+	var connection = mysql.getConnection;
+	connection.query(query,[id],function(err,results) {
 		if(err) {
 			throw err;
 		} else {

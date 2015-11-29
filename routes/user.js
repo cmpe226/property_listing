@@ -128,6 +128,21 @@ function login(req,res) {
 	}
 }
 
+function showEditProfile(req,res) {
+	var ID = req.session.user.ID;
+	var user = {};
+	mysql.getUserById(ID,function(err,results) {
+		if(results.length > 0) {
+			res.render("editprofile",{user:results[0]});
+		}
+		else {
+			res.send(ERROR_MESSAGE);
+		}
+	});
+
+
+}
+
 
 
 function verifyCreateParameters(req) {
@@ -152,3 +167,4 @@ exports.createUser=createUser;
 exports.getUserById=getUserById;
 exports.getAllUsers=getAllUsers;
 exports.login=login;
+exports.editProfile=showEditProfile;

@@ -68,16 +68,17 @@ app.post('/doAddProperty', controller.doAddProperty);
 // app.delete('/user/:userid', user.deleteRegisteredUser);
 app.post('/login', user.login);
 
+//Do not authenitcate the login page
 app.get('/', pages.signup);
-app.get('/propertydetails', pages.propertydetails);
-app.get('/listing', pages.listing);
+app.get('/propertydetails', authenticate, pages.propertydetails);
+app.get('/listing', authenticate,pages.listing);
 app.get('/addproperty',authenticate, pages.addproperty);
-app.get('/properties', pages.getProperties);
-
+app.get('/properties', authenticate,pages.getProperties);
+app.get('/editprofile',authenticate,user.editProfile);
 
 
 //CHANGE THIS TO TRUE WHEN WE DEMO! - This does the authentication
-var DEVMODE = true;
+var DEVMODE = false;
 function authenticate(req,res,next) {
 	if (req.session.user || DEVMODE) {
 		next();
