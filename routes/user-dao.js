@@ -85,6 +85,7 @@ function insertNewPropertyOwnerSP(callback,fullUserData) {
 function getUserById(id,callback) {
 	var query = "select * from allusers where id = ?";
 	var connection = mysql.getConnection;
+
 	connection.query(query,[id],function(err,results) {
 		if(err) {
 			throw err;
@@ -131,6 +132,45 @@ function getAllUsers(callback) {
 
 }
 
+function editUserData(callback,updatedUserInfo) {
+	var table = '';
+	var field = '';
+	if(updatedUserInfo.type === 2) {
+		table = 'RealEstateAgent';
+		field = 'AgentId';
+	} else if( updatedUserInfo.type === 3) {
+		table = 'PropertyOwner';
+		field = 'OwnerId';
+	} else {
+		table = 'RegisteredUser';
+		field = 'UserID';
+	}
+	var connection = mysql.getConnection;
+	var updateProfileQuery = 'UPDATE Profile SET FirstName =  ? , LastName = ? WHERE ProfileID = ?';
+	connection.query(updateProfileQuery,[updatedUserInfo.FirstName,updatedUserInfo.LastName,updatedUserInfo.profileid],function(err,results) {
+		if(updatedUserInfo.Password) {
+			var query = 'UPDATE ' + table + ' SET Password = ? where ' + field + ' = ?;';
+			connection.query(query,[updatedUserInfo.Password],function(err,result) {
+				if(err) {
+					throw err;
+				} else {
+					callback(err,result);
+				}
+			});
+		} else {
+			callback(err,results);
+		}
+	});
+}
+
+function setUserPhoto(callback,photoLocation,profileid) {
+	var query = "UPDATE Profile SET Photo = ? where ProfileID = ?"
+	var connection = mysql.getConnection;
+	connection.query(query,[photoLocation,profileid],function(err,result){
+		callback(err,result);
+	});
+}
+
 function createCrypto(pwd,callback) {
 	crypto.randomBytes(16, function(ex, salt) {
 		if(ex) {
@@ -160,6 +200,8 @@ exports.insertNewProfile=insertNewProfile;
 exports.insertNewRegisteredUserSP=insertNewRegisteredUserSP;
 exports.insertNewRealEstateAgentSP=insertNewRealEstateAgentSP;
 exports.insertNewPropertyOwnerSP=insertNewPropertyOwnerSP;
+exports.editUserData=editUserData;
 exports.getUserById=getUserById;
 exports.getAllUsers=getAllUsers;
 exports.getUserLoginData=getUserLoginData;
+exports.setUserPhoto=setUserPhoto;

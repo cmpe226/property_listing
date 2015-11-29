@@ -5,6 +5,7 @@ var ERROR_MESSAGE = {
     "success" : false,
     "status" : 401
 };
+var fs = require('fs');
 
 function createUser(req,res) {
 	if(verifyCreateParameters(req) == true) {
@@ -110,12 +111,22 @@ function login(req,res) {
 				if(results.length >= 1) {
 					req.session.regenerate(function (err) {
 						if (!err) {
-							req.user = results[0];
-							req.session.user = results[0];
-							delete req.user.Password;
-							res.locals.user = results[0];
-							res.location('/');
-							res.json(200, req.session.user);
+							mysql.getUserById(results[0].ID,function(err,results2) {
+								if(err) {
+									throw err;
+								} else {
+									req.user = results[0];
+									req.user.type = results2[0].type;
+									req.user.profileid = results2[0].ProfileID;
+									req.session.user = results[0];
+									req.session.user.type = results2[0].type;
+									req.session.user.profileid = results2[0].ProfileID;
+									delete req.user.Password;
+									res.locals.user = results[0];
+									res.location('/');
+									res.json(200, req.session.user);
+								}
+							});
 						}
 					});
 				} else {
@@ -143,6 +154,45 @@ function showEditProfile(req,res) {
 
 }
 
+function submitEditProfile(req,res) {
+	var updatedInfo = {};
+	updatedInfo.FirstName = req.body.firstname;
+	updatedInfo.firstname = req.body.firstname;
+	updatedInfo.LastName = req.body.lastname;
+	updatedInfo.lastname = req.body.lastname;
+	updatedInfo.type = req.session.user.type;
+	updatedInfo.profileid = req.session.user.profileid;
+
+	if(req.body.password !== '*****') {
+		updatedInfo.Password = req.body.password;
+	}
+	mysql.editUserData(function(err,result) {
+		if(err) {
+			throw err;
+		} else {
+			if(req.files && req.files.image && req.files.image.name) {
+				fs.readFile(req.files.image.path, function(err,data) {
+					var fileName = req.files.image.name;
+					var path = __dirname +  "/../public/images/uploads/" + fileName;
+					fs.writeFile(path,data,function(err) {
+						console.log("image uploaded.")
+						mysql.setUserPhoto(function(err,result){
+							if(err) {
+								throw err;
+							} else {
+								updatedInfo.photo = '/images/uploads/' + fileName;
+								res.render("editprofile",{user:updatedInfo, success:true});
+							}
+						},'/images/uploads/' + fileName,req.session.user.profileid);
+					});
+				});
+			} else {
+				res.render("editprofile",{user:updatedInfo, success:true});
+			}
+		}
+	},updatedInfo);
+}
+
 
 
 function verifyCreateParameters(req) {
@@ -168,3 +218,4 @@ exports.getUserById=getUserById;
 exports.getAllUsers=getAllUsers;
 exports.login=login;
 exports.editProfile=showEditProfile;
+exports.submitEditProfile=submitEditProfile;
