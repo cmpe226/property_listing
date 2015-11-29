@@ -2,11 +2,12 @@
  * Module dependencies.
  */
 
-var express = require('express'), routes = require('./routes'), user = require('./routes/user'), usermysql = require('./routes/user-mysql'), http = require('http'), path = require('path'), mysql = require('mysql');
+var express = require('express'), routes = require('./routes'), user = require('./routes/user'), usermysql = require('./routes/user-dao'), http = require('http'), path = require('path'), mysql = require('mysql'),
+	bodyParser = require('body-parser')
+	,cookieParser = require('cookie-parser');
 
 var cors = require('cors');
 var session = require('express-session');
-var auth = require('./routes/auth');
 
 var app = express();
 var pages = require('./routes/pages');
@@ -25,16 +26,19 @@ app.use(cors());
 app.use(express.favicon());
 app.use(express.logger('dev'));
 app.use(express.bodyParser());
+app.use(bodyParser.urlencoded({extended:false}));
 app.use(express.methodOverride());
+app.use(express.cookieParser());
+app.use(session({
+	cookieName: 'session',
+	secret: 'random_string_goes_here',
+	duration: 30 * 60 * 1000,
+	activeDuration: 5 * 60 * 1000,
+}));
 app.use(app.router);
 app.use(express.static(path.join(__dirname, 'public')));
-app.use(session({
-	secret : 'CMPE226',
-	resave : false,
-	saveUninitialized : true
-// ,
-// cookie: { maxAge: 15 * 60 * 1000 }
-}));
+
+
 
 // development only
 if ('development' == app.get('env')) {
@@ -43,16 +47,16 @@ if ('development' == app.get('env')) {
 
 var conn = connection.getConnection;
 
-conn.connect(function(err) {
-	if (err) {
-		console.log('Error connecting to Db: ' + err);
-		return;
-	}
-	console.log('Connection established');
-});
+conn.connect(function(err){
+	  if(err){
+	    console.log('Error connecting to Db: ' + err);
+	    return;
+	  }
+	  console.log('Connection established');
+	});
 
 // GETS
-app.get('/user', user.getUserById);
+app.get('/user/:userid', user.getUserById);
 // app.get('/users', user.getAllUsers);
 
 // POSTS
@@ -62,18 +66,38 @@ app.post('/doAddProperty', controller.doAddProperty);
 
 // DELETES
 // app.delete('/user/:userid', user.deleteRegisteredUser);
+app.post('/login', user.login);
 
 app.get('/signup', pages.signup);
 app.get('/propertydetails', pages.propertydetails);
 app.get('/listing', pages.listing);
 app.get('/addproperty', pages.addproperty);
 app.get('/properties', pages.getProperties);
-app.get('/listings/:id', pages.getPropertyListingById, pages.getPropertyFeatures,
-		pages.renderPropertyDetails);
+
 
 app.use('/', routes.index);
 app.use('/login', auth.login);
 app.use('/register', auth.register);
+//Do not authenitcate the login page
+app.get('/', pages.signup);
+app.get('/propertydetails', authenticate, pages.propertydetails);
+app.get('/listing', authenticate,pages.listing);
+app.get('/addproperty',authenticate, pages.addproperty);
+app.get('/properties', authenticate,pages.getProperties);
+app.get('/editprofile',authenticate,user.editProfile);
+
+app.get('/listings/:id', pages.getPropertyListingById, pages.getPropertyFeatures,
+		pages.renderPropertyDetails);
+
+//CHANGE THIS TO TRUE WHEN WE DEMO! - This does the authentication
+var DEVMODE = false;
+function authenticate(req,res,next) {
+	if (req.session.user || DEVMODE) {
+		next();
+	} else {
+		res.redirect('/');
+	}
+};
 
 http.createServer(app).listen(app.get('port'), app.get('ip'), function() {
 	console.log('Express server listening on port ' + app.get('port'));
