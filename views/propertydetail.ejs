@@ -94,14 +94,15 @@
 				<!-- Wrapper for slides -->
 				<div class="carousel-inner" role="listbox" width="600">
 					<div class="item active" align="center">
-						<img src="https://storage.googleapis.com/idx-acnt-gs.ihouseprd.com/AR470953/site/banner_image_original_1444747218.jpg"
+						<img
+							src="https://storage.googleapis.com/idx-acnt-gs.ihouseprd.com/AR470953/site/banner_image_original_1444747218.jpg"
 							alt="..." height="200">
 						<div class="carousel-caption">...</div>
 					</div>
 					<div class="item" align="center">
 						<img
 							src="https://upload.wikimedia.org/wikipedia/commons/c/c7/Beautiful_home_located_on_5_view_acres_IMG_1476.JPG"
-							alt="..." height="200" >
+							alt="..." height="200">
 						<div class="carousel-caption">...</div>
 					</div>
 					<div class="item" align="center">
@@ -168,6 +169,12 @@
 						<th>Owner</th>
 					</thead>
 					<tbody>
+						<tr>
+							<td><img src=<%=property.AgentPhoto%> alt=
+								"ProfileImage" width="128px" height="128px" /></td>
+							<td><img src=<%=property.OwnerPhoto%> alt=
+								"ProfileImage" width="128px" height="128px" /></td>
+						</tr>
 						<tr>
 							<td><%=property.AgentFName + " " + property.AgentLName%></td>
 							<td><%=property.OwnerFName + " " + property.OwnerLName%></td>
