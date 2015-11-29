@@ -108,7 +108,16 @@ function login(req,res) {
 				throw err;
 			} else {
 				if(results.length >= 1) {
-					res.send({message:"success"});
+					req.session.regenerate(function (err) {
+						if (!err) {
+							req.user = results[0];
+							req.session.user = results[0];
+							delete req.user.Password;
+							res.locals.user = results[0];
+							res.location('/');
+							res.json(200, req.session.user);
+						}
+					});
 				} else {
 					res.render('signup',{showInvalidCredentials:true});
 				}

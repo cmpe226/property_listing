@@ -98,15 +98,15 @@ function getUserById(id,callback) {
 }
 
 function getUserLoginData(callback,loginData) {
-	var query = 'select Username,Password ' +
+	var query = 'select ID,Username,Password ' +
 	'from ( ' +
-		' select Username,Password '  +
+		' select AgentId as ID,Username,Password '  +
 	' from PropertyListing.RealEstateAgent ' +
 	' union ' +
-	' select Username, Password ' +
+	' select UserID as ID, Username, Password ' +
 	' from PropertyListing.RegisteredUser ' +
 	' union ' +
-	' select Username, Password' +
+	' select OwnerId as ID,Username, Password' +
 	' from PropertyListing.PropertyOwner ' +
     ') t ' +
 	' where t.Username = ? and t.Password = ?';
