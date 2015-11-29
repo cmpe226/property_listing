@@ -118,16 +118,19 @@
 	</div>
 	<div align="center">
 		<div>
-			<h1>Property Name</h1>
+			<h1><%=property.PropertyName %></h1>
 			<h1>
-				<small>Property Address</small>
+				<small><%=property.Street + "," + property.City +"," +
+					property.State + "," + property.Zip %></small>
 			</h1>
 		</div>
-		<div align="center">
+		
+		<div class="row" >
+		<div class="col-md-8 col-md-offset-2" align="center">
 			<div class="panel panel-default">
 				<!-- Default panel contents -->
 				<div class="panel-heading">
-					<p>Property Description</p>
+					<p><%=property.Description%></p>
 				</div>
 
 				<!-- Table -->
@@ -135,19 +138,40 @@
 					<tr>
 						<th>Features</th>
 					</tr>
+					<% for(var i=0; i
+					<features.length; i++) {%>
 					<tr>
-						<td>feature1</td>
+						<td><%= features[i].Features %></td>
 
 					</tr>
-					<tr>
-						<td>feature2</td>
-
-					</tr>
-					<tr>
-						<td>feature3</td>
-
-					</tr>
+					<% } %> 
 				</table>
+			</div>
+		</div>
+		</div>
+
+		<div class="row">
+		<div class="col-md-8 col-md-offset-2">
+		<table class="table table-hover" align="center">
+			<thead>
+				<th>Real Estate Agent</th>
+				<th>Owner</th>
+			</thead>
+			<tbody>
+				<tr>
+					<td><%=property.AgentFName + " " + property.AgentLName%></td>
+					<td><%=property.OwnerFName + " " + property.OwnerLName%></td>
+				</tr>
+				<tr>
+					<td><%=property.AgentEmail%></td>
+					<td><%=property.OwnerEmail%></td>
+				</tr>
+				<tr>
+					<td><%=property.AgentContact%></td>
+					<td><%=property.OwnerContact%></td>
+				</tr>
+			</tbody>
+		</table>
 			</div>
 		</div>
 	</div>

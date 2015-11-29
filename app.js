@@ -43,13 +43,13 @@ if ('development' == app.get('env')) {
 
 var conn = connection.getConnection;
 
-conn.connect(function(err){
-	  if(err){
-	    console.log('Error connecting to Db: ' + err);
-	    return;
-	  }
-	  console.log('Connection established');
-	});
+conn.connect(function(err) {
+	if (err) {
+		console.log('Error connecting to Db: ' + err);
+		return;
+	}
+	console.log('Connection established');
+});
 
 // GETS
 app.get('/user', user.getUserById);
@@ -68,6 +68,9 @@ app.get('/propertydetails', pages.propertydetails);
 app.get('/listing', pages.listing);
 app.get('/addproperty', pages.addproperty);
 app.get('/properties', pages.getProperties);
+app.get('/listings/:id', pages.getPropertyListingById, pages.getPropertyFeatures,
+		pages.renderPropertyDetails);
+
 app.use('/', routes.index);
 app.use('/login', auth.login);
 app.use('/register', auth.register);
