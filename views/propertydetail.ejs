@@ -1,0 +1,196 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="ISO-8859-1">
+<title>Property Name</title>
+<script src="https://code.jquery.com/jquery-2.1.4.min.js"></script>
+<!-- Latest compiled and minified CSS -->
+<link rel="stylesheet"
+	href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/css/bootstrap.min.css"
+	crossorigin="anonymous">
+
+<!-- Optional theme -->
+<link rel="stylesheet"
+	href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/css/bootstrap-theme.min.css"
+	crossorigin="anonymous">
+
+<!-- Latest compiled and minified JavaScript -->
+<script
+	src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/js/bootstrap.min.js"
+	crossorigin="anonymous"></script>
+</head>
+<body>
+
+	<nav class="navbar navbar-default">
+		<div class="container-fluid">
+			<!-- Brand and toggle get grouped for better mobile display -->
+			<div class="navbar-header">
+				<button type="button" class="navbar-toggle collapsed"
+					data-toggle="collapse" data-target="#bs-example-navbar-collapse-1"
+					aria-expanded="false">
+					<span class="sr-only">Toggle navigation</span> <span
+						class="icon-bar"></span> <span class="icon-bar"></span> <span
+						class="icon-bar"></span>
+				</button>
+				<a class="navbar-brand" href="#">Brand</a>
+			</div>
+
+			<!-- Collect the nav links, forms, and other content for toggling -->
+			<div class="collapse navbar-collapse"
+				id="bs-example-navbar-collapse-1">
+				<ul class="nav navbar-nav">
+					<li class="active"><a href="#">Link <span class="sr-only">(current)</span></a></li>
+					<li><a href="#">Link</a></li>
+					<li class="dropdown"><a href="#" class="dropdown-toggle"
+						data-toggle="dropdown" role="button" aria-haspopup="true"
+						aria-expanded="false">Dropdown <span class="caret"></span></a>
+						<ul class="dropdown-menu">
+							<li><a href="#">Action</a></li>
+							<li><a href="#">Another action</a></li>
+							<li><a href="#">Something else here</a></li>
+							<li role="separator" class="divider"></li>
+							<li><a href="#">Separated link</a></li>
+							<li role="separator" class="divider"></li>
+							<li><a href="#">One more separated link</a></li>
+						</ul></li>
+				</ul>
+				<form class="navbar-form navbar-left" role="search">
+					<div class="form-group">
+						<input type="text" class="form-control" placeholder="Search">
+					</div>
+					<button type="submit" class="btn btn-default">Submit</button>
+				</form>
+				<ul class="nav navbar-nav navbar-right">
+					<li><a href="#">Link</a></li>
+					<li class="dropdown"><a href="#" class="dropdown-toggle"
+						data-toggle="dropdown" role="button" aria-haspopup="true"
+						aria-expanded="false">Dropdown <span class="caret"></span></a>
+						<ul class="dropdown-menu">
+							<li><a href="#">Action</a></li>
+							<li><a href="#">Another action</a></li>
+							<li><a href="#">Something else here</a></li>
+							<li role="separator" class="divider"></li>
+							<li><a href="#">Separated link</a></li>
+						</ul></li>
+				</ul>
+			</div>
+			<!-- /.navbar-collapse -->
+		</div>
+		<!-- /.container-fluid -->
+	</nav>
+
+	<div class="row">
+		<div class="col-md-8 col-md-offset-2">
+			<div id="carousel-example-generic" class="carousel slide"
+				data-ride="carousel" width="600" height="200">
+				<!-- Indicators -->
+				<ol class="carousel-indicators">
+					<li data-target="#carousel-example-generic" data-slide-to="0"
+						class="active"></li>
+					<li data-target="#carousel-example-generic" data-slide-to="1"></li>
+					<li data-target="#carousel-example-generic" data-slide-to="2"></li>
+				</ol>
+
+				<!-- Wrapper for slides -->
+				<div class="carousel-inner" role="listbox" width="600">
+					<div class="item active" align="center">
+						<img
+							src="https://storage.googleapis.com/idx-acnt-gs.ihouseprd.com/AR470953/site/banner_image_original_1444747218.jpg"
+							alt="..." height="200">
+						<div class="carousel-caption">...</div>
+					</div>
+					<div class="item" align="center">
+						<img
+							src="https://upload.wikimedia.org/wikipedia/commons/c/c7/Beautiful_home_located_on_5_view_acres_IMG_1476.JPG"
+							alt="..." height="200">
+						<div class="carousel-caption">...</div>
+					</div>
+					<div class="item" align="center">
+						<img
+							src="http://www.lexairconditioning.com/wp-content/uploads/2015/10/dream-home-dallas.jpg"
+							alt="..." height="200">
+						<div class="carousel-caption" align="center">...</div>
+					</div>
+				</div>
+
+				<!-- Controls -->
+				<a class="left carousel-control" href="#carousel-example-generic"
+					role="button" data-slide="prev"> <span
+					class="glyphicon glyphicon-chevron-left" aria-hidden="true"></span>
+					<span class="sr-only">Previous</span>
+				</a> <a class="right carousel-control" href="#carousel-example-generic"
+					role="button" data-slide="next"> <span
+					class="glyphicon glyphicon-chevron-right" aria-hidden="true"></span>
+					<span class="sr-only">Next</span>
+				</a>
+			</div>
+		</div>
+	</div>
+
+	<div align="center">
+		<div>
+			<h1><%=property.PropertyName %></h1>
+			<h1>
+				<small><%=property.Street + "," + property.City +"," +
+					property.State + "," + property.Zip %></small>
+			</h1>
+		</div>
+
+		<div class="row">
+			<div class="col-md-8 col-md-offset-2" align="center">
+				<div class="panel panel-default">
+					<!-- Default panel contents -->
+					<div class="panel-heading">
+						<p><%=property.Description%></p>
+					</div>
+
+					<!-- Table -->
+					<table class="table">
+						<tr>
+							<th>Features</th>
+						</tr>
+						<% for(var i=0; i
+						<features.length; i++) {%>
+						<tr>
+							<td><%= features[i].Features %></td>
+
+						</tr>
+						<% } %> 
+					</table>
+				</div>
+			</div>
+		</div>
+
+		<div class="row">
+			<div class="col-md-8 col-md-offset-2">
+				<table class="table table-hover" align="center">
+					<thead>
+						<th>Real Estate Agent</th>
+						<th>Owner</th>
+					</thead>
+					<tbody>
+						<tr>
+							<td><img src=<%=property.AgentPhoto%> alt=
+								"ProfileImage" width="128px" height="128px" /></td>
+							<td><img src=<%=property.OwnerPhoto%> alt=
+								"ProfileImage" width="128px" height="128px" /></td>
+						</tr>
+						<tr>
+							<td><%=property.AgentFName + " " + property.AgentLName%></td>
+							<td><%=property.OwnerFName + " " + property.OwnerLName%></td>
+						</tr>
+						<tr>
+							<td><%=property.AgentEmail%></td>
+							<td><%=property.OwnerEmail%></td>
+						</tr>
+						<tr>
+							<td><%=property.AgentContact%></td>
+							<td><%=property.OwnerContact%></td>
+						</tr>
+					</tbody>
+				</table>
+			</div>
+		</div>
+	</div>
+</body>
+</html>

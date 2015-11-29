@@ -68,6 +68,13 @@ app.post('/doAddProperty', controller.doAddProperty);
 // app.delete('/user/:userid', user.deleteRegisteredUser);
 app.post('/login', user.login);
 
+app.get('/', pages.signup);
+app.get('/propertydetails', authenticate, pages.propertydetails);
+app.get('/listing', authenticate,pages.listing);
+app.get('/addproperty',authenticate, pages.addproperty);
+app.get('/properties', authenticate,pages.getProperties);
+app.get('/editprofile',authenticate,user.editProfile);
+
 //Do not authenitcate the login page
 app.get('/', pages.signup);
 app.get('/propertydetails', authenticate, pages.propertydetails);
@@ -76,6 +83,8 @@ app.get('/addproperty',authenticate, pages.addproperty);
 app.get('/properties', authenticate,pages.getProperties);
 app.get('/editprofile',authenticate,user.editProfile);
 
+app.get('/listings/:id', pages.getPropertyListingById, pages.getPropertyFeatures,
+		pages.renderPropertyDetails);
 
 //CHANGE THIS TO TRUE WHEN WE DEMO! - This does the authentication
 var DEVMODE = false;
