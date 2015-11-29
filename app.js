@@ -69,7 +69,7 @@ app.get('/listing', pages.listing);
 app.get('/addproperty', pages.addproperty);
 app.get('/properties', pages.getProperties);
 app.use('/', routes.index);
-app.use('/login', auth.login);
+app.use('/login', user.login);
 app.use('/register', auth.register);
 
 http.createServer(app).listen(app.get('port'), app.get('ip'), function() {

@@ -46,6 +46,42 @@ function insertNewRealEstateAgent(callback,realestateagent) {
 function getUserProfileData(email,callback) {
 }
 
+function insertNewRegisteredUserSP(callback,fullUserData) {
+	var query = "CALL usercreations(?,?,?,?)"
+	var connection = mysql.getConnection;
+	connection.query(query,[fullUserData.FirstName,fullUserData.LastName,fullUserData.UserName, fullUserData.Password],function(err,result) {
+		if(err) {
+			throw err;
+		} else {
+			callback(err,result);
+		}
+	});
+}
+
+function insertNewRealEstateAgentSP(callback,fullUserData) {
+	var query = "CALL agentcreations(?,?,?,?,?)"
+	var connection = mysql.getConnection;
+	connection.query(query,[fullUserData.FirstName,fullUserData.LastName,fullUserData.LicenseNumber,fullUserData.UserName, fullUserData.Password],function(err,result) {
+		if(err) {
+			throw err;
+		} else {
+			callback(err,result);
+		}
+	});
+}
+
+function insertNewPropertyOwnerSP(callback,fullUserData) {
+	var query = "CALL propertyownercreation(?,?,?,?)"
+	var connection = mysql.getConnection;
+	connection.query(query,[fullUserData.FirstName,fullUserData.LastName,fullUserData.UserName, fullUserData.Password],function(err,result) {
+		if(err) {
+			throw err;
+		} else {
+			callback(err,result);
+		}
+	});
+}
+
 function getUserById(id,callback) {
 	var query = 'select user.userid, user.username ' +
 				'from ' + CLIENT_TABLE + ' user ' +
@@ -61,10 +97,33 @@ function getUserById(id,callback) {
 	});
 }
 
+function getUserLoginData(callback,loginData) {
+	var query = 'select Username,Password ' +
+	'from ( ' +
+		' select Username,Password '  +
+	' from PropertyListing.RealEstateAgent ' +
+	' union ' +
+	' select Username, Password ' +
+	' from PropertyListing.RegisteredUser ' +
+	' union ' +
+	' select Username, Password' +
+	' from PropertyListing.PropertyOwner ' +
+    ') t ' +
+	' where t.Username = ? and t.Password = ?';
+	var connection = mysql.getConnection;
+	connection.query(query,[loginData.UserName,loginData.Password],function(err,results) {
+		if(err) {
+			throw err;
+		} else {
+			callback(err,results);
+		}
+	});
+}
+
 function getAllUsers(callback) {
 	var query = '';
 	console.log(query);
-	var connection = getConnection();
+	var connection = mysql.getConnection();
 	connection.query(query,function(err,results) {
 		if(err) {
 			throw err;
@@ -101,5 +160,9 @@ function createCrypto(pwd,callback) {
 exports.insertNewRegisteredUser=insertNewRegisteredUser;
 exports.insertNewRealEstateAgent=insertNewRealEstateAgent;
 exports.insertNewProfile=insertNewProfile;
+exports.insertNewRegisteredUserSP=insertNewRegisteredUserSP;
+exports.insertNewRealEstateAgentSP=insertNewRealEstateAgentSP;
+exports.insertNewPropertyOwnerSP=insertNewPropertyOwnerSP;
 exports.getUserById=getUserById;
 exports.getAllUsers=getAllUsers;
+exports.getUserLoginData=getUserLoginData;

@@ -11,44 +11,46 @@ function createUser(req,res) {
 		var newUser = {
 			UserName: req.body.username,
 			Password: req.body.password,
-		};
-		var newUserProfile =  {
 			FirstName: req.body.firstname,
 			LastName: req.body.lastname
 		};
 
 		var realEstateUser = false;
-		if(typeof req.body.license != 'undefined' && req.body.license.length > 1 ) {
+		if(typeof req.body.license !== 'undefined' && req.body.license.length > 1 ) {
 			newUser.LicenseNumber = req.body.license;
 			realEstateUser = true;
 		}
 
-		mysql.insertNewProfile(function(err,results) {
-			if(err) {
-				throw err;
-			} else {
-				newUser.ProfileID = results.insertId;
-				if(realEstateUser) {
-					mysql.insertNewRealEstateAgent(function(err, results) {
-						if(err) {
-							throw err;
-						} else {
-							res.render('signup',{accountCreated:true});
-						}
-					},newUser);
+		var propertyOwner = false;
+		if(typeof req.body.propertyowner !== 'undefined') {
+			propertyOwner = true;
+		}
+
+		if(realEstateUser) {
+			mysql.insertNewRealEstateAgentSP(function(err,results) {
+				if(err) {
+					throw err;
 				} else {
-					mysql.insertNewRegisteredUser(function(err, results) {
-						if(err) {
-							throw err;
-						} else {
-							res.render('signup',{accountCreated:true});
-						}
-					},newUser);
+					res.render('signup',{accountCreated:true});
 				}
-			}
-		},newUserProfile);
-
-
+			},newUser);
+		} else if(propertyOwner) {
+			mysql.insertNewPropertyOwnerSP(function(err,results) {
+				if(err) {
+					throw err;
+				} else {
+					res.render('signup',{accountCreated:true})
+				}
+			},newUser);
+		} else {
+			mysql.insertNewRegisteredUserSP(function(err,results) {
+				if(err) {
+					throw err;
+				} else {
+					res.render('signup',{accountCreated:true});
+				}
+			},newUser);
+		}
 	} else {
 		res.render('index', ERROR_MESSAGE);
 	}
@@ -98,6 +100,25 @@ function getAllUsers(req,res) {
 	});
 }
 
+function login(req,res) {
+	if(verifyLoginParameters(req)) {
+		var loginData = {UserName: req.body.username, Password: req.body.password};
+		mysql.getUserLoginData(function(err,results) {
+			if(err) {
+				throw err;
+			} else {
+				if(results.length >= 1) {
+					res.send({message:"success"});
+				} else {
+					res.render('signup',{showInvalidCredentials:true});
+				}
+			}
+		},loginData);
+	} else {
+		res.send(ERROR_MESSAGE);
+	}
+}
+
 
 
 function verifyCreateParameters(req) {
@@ -110,6 +131,15 @@ function verifyCreateParameters(req) {
 	}
 }
 
+function verifyLoginParameters(req) {
+	if(typeof req.body.username !== 'undefined' && req.body.password !== 'undefined') {
+		return true;
+	} else {
+		return false;
+	}
+}
+
 exports.createUser=createUser;
 exports.getUserById=getUserById;
 exports.getAllUsers=getAllUsers;
+exports.login=login;

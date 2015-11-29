@@ -28,6 +28,11 @@
 					<strong>Success!</strong> Your account has been created.
 				</div>
 			<%}%>
+			<%if (locals.showInvalidCredentials){%>
+			<div class="alert alert-danger">
+				<strong>Invalid Credentials</strong> Username and/or Password are incorrect.
+			</div>
+			<%}%>
 			<div id="loginbox" style="margin-top: 50px;"
 				class="mainbox col-md-6 col-md-offset-3 col-sm-8 col-sm-offset-2">
 				<div class="panel panel-info">
@@ -44,7 +49,7 @@
 						<div style="display: none" id="login-alert"
 							class="alert alert-danger col-sm-12"></div>
 
-						<form id="loginform" class="form-horizontal" role="form">
+						<form id="loginform" class="form-horizontal" role="form" method="POST" action="/login">
 
 							<div style="margin-bottom: 25px" class="input-group">
 								<span class="input-group-addon"><i
@@ -153,7 +158,16 @@
 
 							<div class="form-group">
 								<div class="col-md-3" align="right">
-									<input type="checkbox" name="agent" placeholder="I am an agent"
+									<input id="propertyowner" type="checkbox" name="propertyowner">
+								</div>
+								<div class="col-md-9" align="left">
+									<label for="agent">I am a Property Owner</label>
+								</div>
+							</div>
+
+							<div class="form-group">
+								<div class="col-md-3" align="right">
+									<input id="box-license" type="checkbox" name="agent" placeholder="I am an agent"
 										onclick="$('#license_num').val(''); $('#license_num').toggle();">
 								</div>
 								<div class="col-md-9" align="left">
@@ -193,6 +207,22 @@
 <script>
 	$('#btn-signup').click(function() {
 		$('#signupform').submit();
+	});
+
+	$('#btn-login').click(function(e) {
+		if(e.attr(''))
+		$('#loginform').submit();
+	});
+
+	$('#propertyowner').change(function() {
+		var checked = $(this).is(':checked');
+		if(checked) {
+			$('#box-license').removeAttr('checked').attr('disabled','disabled');
+			$('#license_num').hide();
+		} else {
+			$('#box-license').removeAttr('disabled');
+		}
+
 	});
 </script>
 </html>
