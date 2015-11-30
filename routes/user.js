@@ -138,6 +138,32 @@ function login(req,res) {
 	}
 }
 
+function adminLogin(req,res) {
+	if(verifyLoginParameters(req)) {
+		var adminLoginData = {Username: req.body.username, Password: req.body.password};
+		mysql.getUserLoginData(function(err,results) {
+			if(results && results[0].ID === -1) {
+				mysql.getUserById(results[0].ID,results[0].Username,results[0].Password, function(err,results2) {
+					if(!err) {
+						req.user = results[0];
+						req.user.type = results2[0].type;
+						req.user.profileid = results2[0].ProfileID;
+						req.session.user = results[0];
+						req.session.user.type = results2[0].type;
+						req.session.user.profileid = results2[0].ProfileID;
+						res.locals.user = results[0];
+						res.location('/');
+						res.redirect("/home");
+
+					}
+				})
+			}
+		},adminLoginData);
+	} else {
+		res.send(ERROR_MESSAGE);
+	}
+}
+
 function logOut(req,res) {
 	req.session.destroy(function(err) {
 		res.redirect("/");
@@ -200,6 +226,7 @@ function submitEditProfile(req,res) {
 	},updatedInfo);
 }
 
+//Delete Profile and it'll cascade
 function deleteUser(req,res) {
 	var id = req.body.id;
 	var username = req.body.username;
@@ -239,6 +266,7 @@ exports.createUser=createUser;
 exports.getUserById=getUserById;
 exports.getAllUsers=getAllUsers;
 exports.login=login;
+exports.adminLogin=adminLogin;
 exports.editProfile=showEditProfile;
 exports.submitEditProfile=submitEditProfile;
 exports.deleteUser=deleteUser;

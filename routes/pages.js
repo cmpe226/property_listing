@@ -4,6 +4,7 @@
 
 var propertyDAO = require('./property_dao');
 var propertyListingDAO = require('./property_listing_dao');
+var userDao = require('./user-dao');
 exports.signup = function(req, res) {
 	if(req.session.user) {
 		res.redirect("/home");
@@ -14,8 +15,12 @@ exports.signup = function(req, res) {
 	}
 };
 
+exports.adminLoginPage = function(req,res) {
+	res.render("adminlogin");
+}
+
 exports.propertydetails = function(req, res) {
-	res.render('propertydetail.html', {
+	res.render('propertydetail', {
 		title : 'Express'
 	});
 };
@@ -66,6 +71,18 @@ exports.showHomePage = function(req,res) {
 	res.render("index");
 }
 
+exports.getBookmarks = function(req,res,next) {
+	var bookmarks = [];
+	if(req.session.user) {
+		userDao.getBookmarks(req.session.user.ID,function(err,result) {
+			bookmarks = result;
+			req.session.bookmarks = bookmarks;
+			res.locals.bookmarks = bookmarks;
+			return next();
+		});
+	}
+}
+
 // ====================FUNCTIONS TO SHOW PROPERTY DETAILS PAGE
 
 function getPropertyListingById(req, res, next) {
@@ -92,12 +109,20 @@ function getPropertyFeatures(req, res, next) {
 }
 
 function renderPropertyDetails(req, res) {
+	var userData = {};
+	if(req.session.user && req.session.user.type) {
+		userData.type = req.session.user.type;
+	}
+
 	res.render('propertydetail', {
 		title : 'Express',
 		property : req.property,
 		features : req.features,
+		user:userData
 	});
 }
+
+
 
 exports.getPropertyListingById = getPropertyListingById;
 exports.getPropertyFeatures = getPropertyFeatures;

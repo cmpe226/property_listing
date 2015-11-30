@@ -67,27 +67,31 @@ app.post('/submitEditProfile',user.submitEditProfile);
 // DELETES
 app.post('/userdelete',authenticate, user.deleteUser);
 app.post('/login', user.login);
+app.post('/adminLogin',user.adminLogin);
 
 
 app.get('/', pages.signup);
+app.get('/adminLoginPage',pages.adminLoginPage);
 app.get('/propertydetails', authenticate, pages.propertydetails);
-app.get('/listing', authenticate,pages.listing);
+app.get('/listing',pages.listing);
 app.get('/addproperty',authenticate, pages.addproperty);
 app.get('/properties', authenticate,pages.getProperties);
 app.get('/editprofile',authenticate,user.editProfile);
 
 //Do not authenitcate the login page
 app.get('/', pages.signup);
-app.get('/home', pages.showHomePage);
+app.get('/home',pages.getBookmarks, pages.showHomePage);
 app.get('/propertydetails',  pages.propertydetails);
 app.get('/listing', pages.listing);
 app.get('/addproperty',authenticate, pages.addproperty);
 app.get('/properties', authenticate,pages.getProperties);
-app.get('/editprofile',authenticate,user.editProfile);
+app.get('/editprofile',authenticate,pages.getBookmarks,user.editProfile);
 app.get('/logout',user.logOut);
 
 app.get('/listings/:id', pages.getPropertyListingById, pages.getPropertyFeatures,
 		pages.renderPropertyDetails);
+
+//app.get('/bookmarks',pages.showBookmarksPage);
 
 
 //CHANGE THIS TO TRUE WHEN WE DEMO! - This does the authentication

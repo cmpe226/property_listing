@@ -195,6 +195,21 @@ function setUserPhoto(callback,photoLocation,profileid) {
 	});
 }
 
+function getBookmarks(userid,callback) {
+	var query = "select l.ListingID,concat(Street,', ', City, ', ',State,', ', Zip) as link " +
+		"from Bookmarks b " +
+			"inner join Listing l on b.ListingId = l.ListingID " +
+			"inner join Property p on l.PropertyID = p.PropertyID " +
+		"where b.UserId = 1";
+	var connection = mysql.getConnection;
+	connection.query(query,[userid],function(err,result) {
+		if(!err) {
+			callback(err,result);
+		}
+	});
+
+}
+
 function createCrypto(pwd,callback) {
 	crypto.randomBytes(16, function(ex, salt) {
 		if(ex) {
@@ -230,3 +245,4 @@ exports.getAllUsers=getAllUsers;
 exports.getUserLoginData=getUserLoginData;
 exports.setUserPhoto=setUserPhoto;
 exports.deleteUser=deleteUser;
+exports.getBookmarks=getBookmarks;
