@@ -1,5 +1,6 @@
 var ejs = require('ejs');
 var mysql = require('./user-dao');
+var bkmrk = require('./bookmarks-dao');
 var ERROR_MESSAGE = {
     "message" : "Error occurred",
     "success" : false,
@@ -215,6 +216,22 @@ function deleteUser(req,res) {
 	});
 }
 
+function addBookmark(req, res){
+	var listingId = req.body.listingId;
+	var userId =  req.session.user.ID;
+	console.log("Bookmark Listing Id: " + listingId + " " + userId);
+	
+	bkmrk.createBookmark(function(err, result){
+		if(!err){
+			console.log(result);
+		}
+		else
+			throw(err);
+	}, listingId, userId);
+	
+	res.redirect('/home');
+}
+
 
 
 function verifyCreateParameters(req) {
@@ -243,3 +260,4 @@ exports.editProfile=showEditProfile;
 exports.submitEditProfile=submitEditProfile;
 exports.deleteUser=deleteUser;
 exports.logOut=logOut;
+exports.addBookmark=addBookmark;
