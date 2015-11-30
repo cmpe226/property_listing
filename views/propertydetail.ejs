@@ -130,7 +130,12 @@
 	<div align="center">
 		<div>
 			<% if (user.type == 2) { %>
+			<br>
+			<form method='post' action='/deleteProperty'>
+			<input type='hidden' name='propertyId' value=<%= property.PropertyID%>>
+			<input type='hidden' name='agentId' value= <%=property.AgentId%>>
 			<input type="submit" value='Delete Property'>
+			</form>
 			<% } %>
 			<h1><%=property.PropertyName %></h1>
 			<h1>
@@ -146,7 +151,7 @@
 			</form>
 			<% } %>
 			<% if (user.type == 2) { %>
-			<input type="submit" value='Delete Property'>
+			<input type="submit" value='Delete Listing'>
 			<% } %>
 			<h3><small>DateTime Listed: <%= property.ListingDateTime %>
 			<br>Sale Price: <%= property.SalePrice %>

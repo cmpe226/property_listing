@@ -20,7 +20,7 @@ function getListingById(id, success, failure) {
 			+ "AgentProfile.contact AS 'AgentContact', AgentProfile.Photo AS 'AgentPhoto', "
 			+ "OwnerProfile.FirstName AS 'OwnerFName', OwnerProfile.LastName AS 'OwnerLName', "
 			+ "OwnerProfile.Email AS 'OwnerEmail', OwnerProfile.contact AS 'OwnerContact', "
-			+ "OwnerProfile.Photo AS 'OwnerPhoto' FROM PropertyListing.Listing, "
+			+ "OwnerProfile.Photo AS 'OwnerPhoto', Property.AgentId AS 'AgentId' FROM PropertyListing.Listing, "
 			+ "PropertyListing.Property, PropertyListing.PropertyOwner, PropertyListing.RealEstateAgent, "
 			+ "PropertyListing.Profile OwnerProfile, PropertyListing.Profile AgentProfile "
 			+ "WHERE ListingID = ? AND Listing.PropertyID = Property.PropertyID AND "
