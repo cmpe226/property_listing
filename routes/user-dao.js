@@ -82,11 +82,11 @@ function insertNewPropertyOwnerSP(callback,fullUserData) {
 	});
 }
 
-function getUserById(id,callback) {
-	var query = "select * from allusers where id = ?";
+function getUserById(id,username,password,callback) {
+	var query = "select * from allusers where id = ? and username = ? and password = ?";
 	var connection = mysql.getConnection;
 
-	connection.query(query,[id],function(err,results) {
+	connection.query(query,[id,username,password],function(err,results) {
 		if(err) {
 			throw err;
 		} else {
@@ -163,6 +163,30 @@ function editUserData(callback,updatedUserInfo) {
 	});
 }
 
+function deleteUser(id,type,callback) {
+	var table = '';
+	var field = '';
+	if(type === 2) {
+		table = 'RealEstateAgent';
+		field = 'AgentId';
+	} else if( type === 3) {
+		table = 'PropertyOwner';
+		field = 'OwnerId';
+	} else {
+		table = 'RegisteredUser';
+		field = 'UserID';
+	}
+	var connection = mysql.getConnection;
+	var deleteQuery = 'DELETE from ' +  table +  ' where ' + field + ' = ?';
+	connection.query(deleteQuery,[id],function(err,result){
+		if(!err) {
+			callback(err,result);
+		}
+	});
+
+
+}
+
 function setUserPhoto(callback,photoLocation,profileid) {
 	var query = "UPDATE Profile SET Photo = ? where ProfileID = ?"
 	var connection = mysql.getConnection;
@@ -205,3 +229,4 @@ exports.getUserById=getUserById;
 exports.getAllUsers=getAllUsers;
 exports.getUserLoginData=getUserLoginData;
 exports.setUserPhoto=setUserPhoto;
+exports.deleteUser=deleteUser;

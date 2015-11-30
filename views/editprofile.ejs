@@ -36,7 +36,7 @@
                         class="icon-bar"></span> <span class="icon-bar"></span> <span
                         class="icon-bar"></span>
             </button>
-            <a class="navbar-brand" href="#">Brand</a>
+            <a class="navbar-brand" href="/home">RealEstateListings</a>
         </div>
 
         <!-- Collect the nav links, forms, and other content for toggling -->
@@ -58,23 +58,21 @@
                         <li><a href="#">One more separated link</a></li>
                     </ul></li>
             </ul>
-            <form class="navbar-form navbar-left" role="search">
-                <div class="form-group">
-                    <input type="text" class="form-control" placeholder="Search">
-                </div>
-                <button type="submit" class="btn btn-default">Submit</button>
-            </form>
+
             <ul class="nav navbar-nav navbar-right">
                 <li><a href="#">Link</a></li>
                 <li class="dropdown"><a href="#" class="dropdown-toggle"
                                         data-toggle="dropdown" role="button" aria-haspopup="true"
-                                        aria-expanded="false">Dropdown <span class="caret"></span></a>
+                                        aria-expanded="false"><%=locals.user.username%> <span class="caret"></span></a>
                     <ul class="dropdown-menu">
-                        <li><a href="#">Action</a></li>
-                        <li><a href="#">Another action</a></li>
-                        <li><a href="#">Something else here</a></li>
+                        <%if(locals.user.guest){%>
+                        <li><a href="/">Sign Up!</a></li>
+                        <%}%>
+                        <%if(!locals.user.guest){%>
+                        <li><a href="/editprofile">Profile</a></li>
                         <li role="separator" class="divider"></li>
-                        <li><a href="#">Separated link</a></li>
+                        <li><a href="/logout">Log Out</a></li>
+                        <%}%>
                     </ul></li>
             </ul>
         </div>
@@ -91,6 +89,18 @@
     <%}%>
     <h3 class="media-heading"> Edit Profile Information: </h3>
     <form method="post" action="/submitEditProfile" enctype="multipart/form-data">
+        <div>
+            <%if (user.photo) {%>
+            <img src="<%=user.photo%>" />
+            <%} else { %>
+            <img src="/images/uploads/default.gif" />
+            <%}%>
+            <div class="form-group">
+                <label for="fileInput">Photo</label>
+                <input type="file" id="fileInput" name="image">
+            </div>
+        </div>
+
         <div class="form-group">
             <label for="firstname">First Name:</label>
             <input type="text" class="form-control" id="firstname" name="firstname" value="<%=user.firstname%>">
@@ -114,23 +124,52 @@
                     name="password" value="*****">
         </div>
 
-
-        <div class="form-group">
-            <label for="fileInput">Photo</label>
-            <input type="file" id="fileInput" name="image">
-        </div>
-        <div>
-            <%if (user.photo) {%>
-            <img src="<%=user.photo%>" />
-            <%} else { %>
-            <img src="/images/uploads/default.gif" />
-            <%}%>
-        </div>
         <br/>
         <br/>
         <button type="submit" class="btn btn-default">Save</button>
     </form>
-</div>
 
+
+    <br/>
+    <br/>
+
+    <button type="button" class="btn btn-danger btn-sm" data-toggle="modal" data-target="#myModal">Delete Account</button>
+
+    <!-- Modal -->
+    <div id="myModal" class="modal fade" role="dialog">
+        <div class="modal-dialog">
+
+            <!-- Modal content-->
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal">&times;</button>
+                    <h4 class="modal-title">Delete Account</h4>
+                </div>
+                <div class="modal-body">
+                    <p>Enter Password To Delete Account</p>
+                    <form action="/userdelete" method="POST">
+                        <input type="hidden" name="id" value="<%=locals.user.id%>"/>
+                        <input type="hidden" name="username" value="<%=locals.user.username%>"/>
+                        <input type="password" name="password" />
+                        <br/>
+                        <div class="modal-footer">
+                            <input type="submit" class="btn btn-info" value="Submit"/>
+                            <button type="button" class="btn btn-default" data-dismiss="modal">Cancel</button>
+                        </div>
+                    </form>
+                </div>
+
+            </div>
+
+        </div>
+    </div>
+
+    <br/>
+    <br/>
+</div>
 </body>
+
+<script>
+    bootbox.alert("Hello world!");
+</script>
 </html>

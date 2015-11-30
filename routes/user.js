@@ -111,7 +111,7 @@ function login(req,res) {
 				if(results.length >= 1) {
 					req.session.regenerate(function (err) {
 						if (!err) {
-							mysql.getUserById(results[0].ID,function(err,results2) {
+							mysql.getUserById(results[0].ID,results[0].Username,results[0].Password,function(err,results2) {
 								if(err) {
 									throw err;
 								} else {
@@ -121,10 +121,9 @@ function login(req,res) {
 									req.session.user = results[0];
 									req.session.user.type = results2[0].type;
 									req.session.user.profileid = results2[0].ProfileID;
-									delete req.user.Password;
 									res.locals.user = results[0];
 									res.location('/');
-									res.json(200, req.session.user);
+									res.redirect("/home");
 								}
 							});
 						}
@@ -139,11 +138,19 @@ function login(req,res) {
 	}
 }
 
+function logOut(req,res) {
+	req.session.destroy(function(err) {
+		res.redirect("/");
+	});
+}
+
 function showEditProfile(req,res) {
 	var ID = req.session.user.ID;
-	var user = {};
-	mysql.getUserById(ID,function(err,results) {
+	var username = req.session.user.Username;
+	var password = req.session.user.Password;
+	mysql.getUserById(ID,username,password,function(err,results) {
 		if(results.length > 0) {
+			res.locals.user = req.session.user;
 			res.render("editprofile",{user:results[0]});
 		}
 		else {
@@ -193,6 +200,21 @@ function submitEditProfile(req,res) {
 	},updatedInfo);
 }
 
+function deleteUser(req,res) {
+	var id = req.body.id;
+	var username = req.body.username;
+	var password = req.body.password;
+	mysql.getUserById(id,username,password,function(err,result) {
+		mysql.deleteUser(id,result[0].type,function(err,result){
+			if(!err) {
+				req.session.destroy(function(err) {
+					res.render("signup",{deletedAccount:true})
+				});
+			}
+		});
+	});
+}
+
 
 
 function verifyCreateParameters(req) {
@@ -219,3 +241,5 @@ exports.getAllUsers=getAllUsers;
 exports.login=login;
 exports.editProfile=showEditProfile;
 exports.submitEditProfile=submitEditProfile;
+exports.deleteUser=deleteUser;
+exports.logOut=logOut;

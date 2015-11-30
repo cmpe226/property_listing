@@ -5,9 +5,13 @@
 var propertyDAO = require('./property_dao');
 var propertyListingDAO = require('./property_listing_dao');
 exports.signup = function(req, res) {
-	res.render('signup', {
-		title : 'Express'
-	});
+	if(req.session.user) {
+		res.redirect("/home");
+	} else {
+		res.render('signup', {
+			title : 'Express'
+		});
+	}
 };
 
 exports.propertydetails = function(req, res) {
@@ -48,6 +52,18 @@ exports.getPropertiesById = function(req, res) {
 	}, function(error) {
 		throw error;
 	});
+}
+
+exports.showHomePage = function(req,res) {
+	if(!req.session.user) {
+		res.locals.user = {};
+		res.locals.user.Username = "Guest";
+		res.locals.user.guest = true;
+	} else {
+		res.locals.user = req.session.user;
+		res.locals.user.guest = false;
+	}
+	res.render("index");
 }
 
 // ====================FUNCTIONS TO SHOW PROPERTY DETAILS PAGE

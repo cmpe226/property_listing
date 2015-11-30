@@ -33,15 +33,16 @@
 				<strong>Invalid Credentials</strong> Username and/or Password are incorrect.
 			</div>
 			<%}%>
+			<%if (locals.deletedAccount) {%>
+			<div class="alert alert-success">
+				 Your account has been deleted.
+			</div>
+			<%}%>
 			<div id="loginbox" style="margin-top: 50px;"
 				class="mainbox col-md-6 col-md-offset-3 col-sm-8 col-sm-offset-2">
 				<div class="panel panel-info">
 					<div class="panel-heading">
 						<div class="panel-title">Sign In</div>
-						<div
-							style="float: right; font-size: 80%; position: relative; top: -10px">
-							<a href="#">Forgot password?</a>
-						</div>
 					</div>
 
 					<div style="padding-top: 30px" class="panel-body">
