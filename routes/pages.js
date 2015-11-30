@@ -45,7 +45,6 @@ exports.getProperties = function(req, res) {
 
 exports.getPropertiesById = function(req, res) {
 	propertyDAO.getPropertyById(100, function(rows) {
-		console.log(rows[0]);
 		res.render('propertydetail.html', {
 			title : 'Express'
 		});
@@ -63,18 +62,41 @@ exports.showHomePage = function(req, res) {
 		res.locals.user = req.session.user;
 		res.locals.user.guest = false;
 	}
-	res.render("index");
+
+	res.render("index", {
+		listings : req.result
+	});
 }
+
+// ===================FUNCTION TO FETCH TOP LISTINGS==========
+exports.getTopListings = function getTopListings(req, res, next) {
+	propertyListingDAO.getTopListings(function(rows) {
+		req.topListings = rows[0];
+		return next();
+	}, function(error) {
+		console.log(error);
+	});
+}
+
+exports.getListingsForIds = function getListingsForIds(req, res, next) {
+	var ids = [];
+	for (var i = 0; i < req.topListings.length; i++) {
+		ids.push(req.topListings[i].ListingId);
+	}
+	propertyListingDAO.getListingForIdSet(ids, function(rows) {
+		req.result = rows;
+		return next();
+	}, function(error) {
+		console.log(error);
+	});
+}
+// ===================END OF FUNCTION TO FETCH TOP LISTINGS==========
 
 // ====================FUNCTIONS TO SHOW PROPERTY DETAILS PAGE
 
 function getPropertyListingById(req, res, next) {
 	propertyListingDAO.getListingById(req.params.id, function(rows) {
-		for ( var i in rows) {
-			console.log(rows[i]);
-		}
 		req.property = rows[0];
-		console.log(req.property);
 		return next();
 	}, function(error) {
 		console.log(error);
@@ -83,7 +105,6 @@ function getPropertyListingById(req, res, next) {
 
 function getPropertyFeatures(req, res, next) {
 	propertyDAO.getFeaturesForProperty(req.params.id, function(rows) {
-		console.log("setting features.. ", rows);
 		req.features = rows;
 		return next();
 	}, function(error) {
