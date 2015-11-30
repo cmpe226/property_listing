@@ -2,9 +2,7 @@
  * Module dependencies.
  */
 
-var express = require('express'), routes = require('./routes'), user = require('./routes/user'), usermysql = require('./routes/user-dao'), http = require('http'), path = require('path'), mysql = require('mysql'),
-	bodyParser = require('body-parser')
-	,cookieParser = require('cookie-parser');
+var express = require('express'), routes = require('./routes'), user = require('./routes/user'), usermysql = require('./routes/user-dao'), http = require('http'), path = require('path'), mysql = require('mysql'), bodyParser = require('body-parser'), cookieParser = require('cookie-parser');
 
 var cors = require('cors');
 var session = require('express-session');
@@ -26,19 +24,19 @@ app.use(cors());
 app.use(express.favicon());
 app.use(express.logger('dev'));
 app.use(express.bodyParser());
-app.use(bodyParser.urlencoded({extended:false}));
+app.use(bodyParser.urlencoded({
+	extended : false
+}));
 app.use(express.methodOverride());
 app.use(express.cookieParser());
 app.use(session({
-	cookieName: 'session',
-	secret: 'random_string_goes_here',
-	duration: 30 * 60 * 1000,
-	activeDuration: 5 * 60 * 1000,
+	cookieName : 'session',
+	secret : 'random_string_goes_here',
+	duration : 30 * 60 * 1000,
+	activeDuration : 5 * 60 * 1000,
 }));
 app.use(app.router);
 app.use(express.static(path.join(__dirname, 'public')));
-
-
 
 // development only
 if ('development' == app.get('env')) {
@@ -47,13 +45,13 @@ if ('development' == app.get('env')) {
 
 var conn = connection.getConnection;
 
-conn.connect(function(err){
-	  if(err){
-	    console.log('Error connecting to Db: ' + err);
-	    return;
-	  }
-	  console.log('Connection established');
-	});
+conn.connect(function(err) {
+	if (err) {
+		console.log('Error connecting to Db: ' + err);
+		return;
+	}
+	console.log('Connection established');
+});
 
 // GETS
 app.get('/user/:userid', user.getUserById);
@@ -62,37 +60,36 @@ app.get('/user/:userid', user.getUserById);
 // POSTS
 app.post('/user', user.createUser);
 app.post('/doAddProperty', controller.doAddProperty);
-app.post('/submitEditProfile',user.submitEditProfile);
+app.post('/submitEditProfile', user.submitEditProfile);
 
 // DELETES
-app.post('/userdelete',authenticate, user.deleteUser);
+app.post('/userdelete', authenticate, user.deleteUser);
 app.post('/login', user.login);
-
 
 app.get('/', pages.signup);
 app.get('/propertydetails', authenticate, pages.propertydetails);
-app.get('/listing', authenticate,pages.listing);
-app.get('/addproperty',authenticate, pages.addproperty);
-app.get('/properties', authenticate,pages.getProperties);
-app.get('/editprofile',authenticate,user.editProfile);
+app.get('/listing', authenticate, pages.listing);
+app.get('/addproperty', authenticate, pages.addproperty);
+app.get('/properties', authenticate, pages.getProperties);
+app.get('/editprofile', authenticate, user.editProfile);
 
-//Do not authenitcate the login page
+// Do not authenitcate the login page
 app.get('/', pages.signup);
 app.get('/home', pages.showHomePage);
-app.get('/propertydetails',  pages.propertydetails);
+app.get('/propertydetails', pages.propertydetails);
 app.get('/listing', pages.listing);
-app.get('/addproperty',authenticate, pages.addproperty);
-app.get('/properties', authenticate,pages.getProperties);
-app.get('/editprofile',authenticate,user.editProfile);
-app.get('/logout',user.logOut);
+app.get('/addproperty', authenticate, pages.addproperty);
+app.get('/properties', authenticate, pages.getProperties);
+app.get('/editprofile', authenticate, user.editProfile);
+app.get('/logout', user.logOut);
 
-app.get('/listings/:id', pages.getPropertyListingById, pages.getPropertyFeatures,
-		pages.renderPropertyDetails);
+app.get('/listings/:id', pages.getPropertyListingById,
+		pages.getPropertyFeatures, pages.renderPropertyDetails);
+app.get('/search', pages.performSearch);
 
-
-//CHANGE THIS TO TRUE WHEN WE DEMO! - This does the authentication
+// CHANGE THIS TO TRUE WHEN WE DEMO! - This does the authentication
 var DEVMODE = false;
-function authenticate(req,res,next) {
+function authenticate(req, res, next) {
 	if (req.session.user || DEVMODE) {
 		res.locals.user = req.session.user;
 		next();
