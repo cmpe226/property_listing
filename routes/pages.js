@@ -117,6 +117,7 @@ function renderPropertyDetails(req, res) {
 		title : 'Express',
 		property : req.property,
 		features : req.features,
+		user : req.session.user
 	});
 }
 

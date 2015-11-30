@@ -61,6 +61,7 @@ app.get('/user/:userid', user.getUserById);
 app.post('/user', user.createUser);
 app.post('/doAddProperty', controller.doAddProperty);
 app.post('/submitEditProfile', user.submitEditProfile);
+app.post('/addBookmark', user.addBookmark);
 
 // DELETES
 app.post('/userdelete', authenticate, user.deleteUser);
