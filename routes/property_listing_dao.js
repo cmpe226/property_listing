@@ -56,7 +56,22 @@ function createProperty() {
 	"INSERT INTO `PropertyListing`.`Property` (`PropertyID`, `Street`, `City`, `State`,`Zip`, `Description`, `OwnerId`, `AgentId`) VALUES (<{PropertyID: }>, <{Street: }>, <{City: }>, <{State: }>, <{Zip: }>, <{Description: }>, <{OwnerId: }>, <{AgentId: }>);";
 }
 
+function getListingByCity(q, success, failure) {
+	var connection = connection_mysql.getConnection;
+	var queryString = 'SELECT  * FROM `PropertyListing`.`unregistereduserview` where `City` like \'%'
+			+ q + '%\';';
+	console.log("Query", queryString);
+	connection.query(queryString, q, function(err, rows, fields) {
+		if (err) {
+			failure(err);
+		} else {
+			success(rows);
+		}
+	});
+}
+
 exports.getAllListings = getAllListings;
 exports.getListingById = getListingById;
 exports.deleteProperty = deleteProperty;
 exports.createProperty = createProperty;
+exports.getListingByCity = getListingByCity;
