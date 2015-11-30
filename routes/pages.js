@@ -5,7 +5,7 @@
 var propertyDAO = require('./property_dao');
 var propertyListingDAO = require('./property_listing_dao');
 exports.signup = function(req, res) {
-	if (req.session.user) {
+	if(req.session.user) {
 		res.redirect("/home");
 	} else {
 		res.render('signup', {
@@ -54,8 +54,8 @@ exports.getPropertiesById = function(req, res) {
 	});
 }
 
-exports.showHomePage = function(req, res) {
-	if (!req.session.user) {
+exports.showHomePage = function(req,res) {
+	if(!req.session.user) {
 		res.locals.user = {};
 		res.locals.user.Username = "Guest";
 		res.locals.user.guest = true;
@@ -96,7 +96,6 @@ function renderPropertyDetails(req, res) {
 		title : 'Express',
 		property : req.property,
 		features : req.features,
-		user : req.session.user
 	});
 }
 
@@ -106,17 +105,4 @@ exports.renderPropertyDetails = renderPropertyDetails;
 
 // ====================END OF FUNCTIONS TO SHOW PROPERTY DETAILS PAGE
 
-// ===================SEARCH========================
-function performSearch(req, res) {
-	var q = req.query.q;
-	propertyListingDAO.getListingByCity(q, function(rows) {
-		res.render('search_result', {
-			results : rows
-		});
-	}, function(error) {
-		console.log(error);
-	});
-}
-exports.performSearch = performSearch;
 
-// ===================END OF SEARCH========================
