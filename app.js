@@ -76,7 +76,8 @@ app.get('/editprofile', authenticate, user.editProfile);
 
 // Do not authenitcate the login page
 app.get('/', pages.signup);
-app.get('/home', pages.showHomePage);
+app.get('/home', pages.getTopListings, pages.getListingsForIds,
+		pages.showHomePage);
 app.get('/propertydetails', pages.propertydetails);
 app.get('/listing', pages.listing);
 app.get('/addproperty', authenticate, pages.addproperty);
