@@ -150,8 +150,11 @@
 			<input type="submit" value='Bookmark Listing'>
 			</form>
 			<% } %>
-			<% if (user.type == 2) { %>
+			<% if (user.type == 2 ) { %> 
+			<form method="post" action="/deleteListing">
+			<input type='hidden' name='listingId' value=<%= property.ListingID%>>
 			<input type="submit" value='Delete Listing'>
+			</form>
 			<% } %>
 			<h3><small>DateTime Listed: <%= property.ListingDateTime %>
 			<br>Sale Price: <%= property.SalePrice %>

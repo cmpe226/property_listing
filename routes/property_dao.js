@@ -13,7 +13,6 @@ function getAllProperties(success, failure) {
 			success(rows);
 		}
 	});
-	connection.end();
 }
 
 function getPropertyById(id, success, failure) {
@@ -26,7 +25,19 @@ function getPropertyById(id, success, failure) {
 			success(rows);
 		}
 	});
-	connection.end();
+}
+
+exports.getPropertyByAgentId = function getPropertyByAgentId(agentId, success,
+		failure) {
+	var connection = connection_mysql.getConnection;
+	var queryString = 'SELECT * FROM `PropertyListing`.`Property` where AgentId = ?;';
+	connection.query(queryString, [ agentId ], function(err, rows, fields) {
+		if (err) {
+			failure(err);
+		} else {
+			success(rows);
+		}
+	});
 }
 
 function deleteProperty(id, success, failure) {
@@ -39,12 +50,12 @@ function deleteProperty(id, success, failure) {
 			success(rows);
 		}
 	});
-	connection.end();
 }
 
-function addProperty(data, failure, success){
+function addProperty(data, failure, success) {
 	var connection = connection_mysql.getConnection;
-	var queryString = 'INSERT INTO `PropertyListing`.`Property`(Name, Street, City, State, Zip, Description, OwnerId, AgentId) VALUES (' + data + ');';
+	var queryString = 'INSERT INTO `PropertyListing`.`Property`(Name, Street, City, State, Zip, Description, OwnerId, AgentId) VALUES ('
+			+ data + ');';
 	connection.query(queryString, function(err, rows, fields) {
 		if (err) {
 			failure(err);
@@ -52,11 +63,19 @@ function addProperty(data, failure, success){
 			success(rows);
 		}
 	});
-	connection.end();
 }
 
-function createProperty() {
-	"INSERT INTO `PropertyListing`.`Property` (`PropertyID`, `Street`, `City`, `State`,`Zip`, `Description`, `OwnerId`, `AgentId`) VALUES (<{PropertyID: }>, <{Street: }>, <{City: }>, <{State: }>, <{Zip: }>, <{Description: }>, <{OwnerId: }>, <{AgentId: }>);";
+function createListing(propertyID, saleprice, success, failure) {
+	var connection = connection_mysql.getConnection;
+	var query = 'INSERT INTO `PropertyListing`.`Listing`	(`SalePrice`,	`SoldPrice`,	`PropertyID`,	`Viewcount`)	VALUES	(?,	0,	?,	0);';
+	connection.query(query, [ saleprice, propertyID ], function(err,
+			rows, fields) {
+		if (err) {
+			failure(err);
+		} else {
+			success(rows);
+		}
+	});
 }
 
 function getFeaturesForProperty(id, success, failure) {
@@ -73,6 +92,6 @@ function getFeaturesForProperty(id, success, failure) {
 exports.getAllProperties = getAllProperties;
 exports.getPropertyById = getPropertyById;
 exports.deleteProperty = deleteProperty;
-exports.createProperty = createProperty;
+exports.createListing = createListing;
 exports.getFeaturesForProperty = getFeaturesForProperty;
 exports.addProperty = addProperty;

@@ -99,9 +99,22 @@ function getListingForIdSet(ids, success, failure) {
 	});
 }
 
+function deleteListing(id, success, failure) {
+	var connection = connection_mysql.getConnection;
+	var queryString = 'DELETE FROM `PropertyListing`.`Listing` WHERE ListingID = ?;';
+	connection.query(queryString, [ id ], function(err, rows, fields) {
+		if (err) {
+			failure(err);
+		} else {
+			success(rows);
+		}
+	});
+}
+
 exports.getAllListings = getAllListings;
 exports.getListingById = getListingById;
 exports.deleteProperty = deleteProperty;
 exports.getListingByCity = getListingByCity;
 exports.getTopListings = getTopListings;
 exports.getListingForIdSet = getListingForIdSet;
+exports.deleteListing = deleteListing;

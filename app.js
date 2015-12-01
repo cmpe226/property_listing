@@ -2,9 +2,7 @@
  * Module dependencies.
  */
 
-var express = require('express'), routes = require('./routes'), user = require('./routes/user'), usermysql = require('./routes/user-dao'), http = require('http'), path = require('path'), mysql = require('mysql'),
-	bodyParser = require('body-parser')
-	,cookieParser = require('cookie-parser');
+var express = require('express'), routes = require('./routes'), user = require('./routes/user'), usermysql = require('./routes/user-dao'), http = require('http'), path = require('path'), mysql = require('mysql'), bodyParser = require('body-parser'), cookieParser = require('cookie-parser');
 
 var cors = require('cors');
 var session = require('express-session');
@@ -26,14 +24,16 @@ app.use(cors());
 app.use(express.favicon());
 app.use(express.logger('dev'));
 app.use(express.bodyParser());
-app.use(bodyParser.urlencoded({extended:false}));
+app.use(bodyParser.urlencoded({
+	extended : false
+}));
 app.use(express.methodOverride());
 app.use(express.cookieParser());
 app.use(session({
-	cookieName: 'session',
-	secret: 'random_string_goes_here',
-	duration: 30 * 60 * 1000,
-	activeDuration: 5 * 60 * 1000,
+	cookieName : 'session',
+	secret : 'random_string_goes_here',
+	duration : 30 * 60 * 1000,
+	activeDuration : 5 * 60 * 1000,
 }));
 app.use(app.router);
 app.use(express.static(path.join(__dirname, 'public')));
@@ -59,15 +59,18 @@ app.get('/user/:userid', user.getUserById);
 
 // POSTS
 app.post('/user', user.createUser);
-app.post('/doAddProperty', controller.doAddProperty);
+app.post('/doAddProperty', controller.doAddProperty,
+		controller.showPropertiesForAgent);
 app.post('/submitEditProfile', user.submitEditProfile);
 app.post('/addBookmark', user.addBookmark);
 app.post('/deleteProperty', user.deleteProperty);
+app.post('/createListing', controller.addListing);
+app.post('/addListing', controller.showAddListing);
+app.post('/deleteListing', controller.deleteListing);
 
 // DELETES
 app.post('/userdelete', authenticate, user.deleteUser);
 app.post('/login', user.login);
-
 app.get('/', pages.signup);
 app.get('/propertydetails', authenticate, pages.propertydetails);
 app.get('/listing', authenticate, pages.listing);
@@ -77,8 +80,8 @@ app.get('/editprofile', authenticate, user.editProfile);
 
 // Do not authenitcate the login page
 app.get('/', pages.signup);
-app.get('/home', pages.getBookmarks,pages.getTopListings, pages.getListingsForIds,
-		pages.showHomePage);
+app.get('/home', pages.getBookmarks, pages.getTopListings,
+		pages.getListingsForIds, pages.showHomePage);
 app.get('/propertydetails', pages.propertydetails);
 app.get('/listing', pages.listing);
 app.get('/addproperty', authenticate, pages.addproperty);
@@ -90,10 +93,10 @@ app.get('/listings/:id', pages.getPropertyListingById,
 		pages.getPropertyFeatures, pages.renderPropertyDetails);
 app.get('/search', pages.performSearch);
 
-
-//CHANGE THIS TO TRUE WHEN WE DEMO! - This does the authentication
+app.get('/showProperties', controller.showPropertiesForAgent);
+// CHANGE THIS TO TRUE WHEN WE DEMO! - This does the authentication
 var DEVMODE = false;
-function authenticate(req,res,next) {
+function authenticate(req, res, next) {
 	if (req.session.user || DEVMODE) {
 		res.locals.user = req.session.user;
 		next();
