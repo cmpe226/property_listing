@@ -51,7 +51,7 @@ function deleteProperty(id, success, failure) {
 
 function getListingByCity(q, success, failure) {
 	var connection = connection_mysql.getConnection;
-	var queryString = 'SELECT  * FROM `PropertyListing`.`unregistereduserview` where `City` like \'%'
+	var queryString = 'SELECT  * FROM `PropertyListing`.`searchview` where `City` like \'%'
 			+ q + '%\';';
 	console.log("Query", queryString);
 	connection.query(queryString, q, function(err, rows, fields) {
@@ -78,7 +78,7 @@ function getTopListings(success, failure) {
 function getListingForIdSet(ids, success, failure) {
 	var connection = connection_mysql.getConnection;
 	var idstring = JSON.stringify(ids);
-	var queryString = 'select * from `PropertyListing`.`unregistereduserview` where ListingID In (?) ORDER BY FIELD(ListingID,?);';
+	var queryString = 'select * from `PropertyListing`.`searchview` where ListingID In (?) ORDER BY FIELD(ListingID,?);';
 	console.log("Query", queryString);
 	connection.query(queryString, [ ids, ids ], function(err, rows, fields) {
 		if (err) {
