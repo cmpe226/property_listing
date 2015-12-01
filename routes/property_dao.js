@@ -42,6 +42,19 @@ function deleteProperty(id, success, failure) {
 	connection.end();
 }
 
+function addProperty(data, failure, success){
+	var connection = connection_mysql.getConnection;
+	var queryString = 'INSERT INTO `PropertyListing`.`Property`(Name, Street, City, State, Zip, Description, OwnerId, AgentId) VALUES (' + data + ');';
+	connection.query(queryString, function(err, rows, fields) {
+		if (err) {
+			failure(err);
+		} else {
+			success(rows);
+		}
+	});
+	connection.end();
+}
+
 function createProperty() {
 	"INSERT INTO `PropertyListing`.`Property` (`PropertyID`, `Street`, `City`, `State`,`Zip`, `Description`, `OwnerId`, `AgentId`) VALUES (<{PropertyID: }>, <{Street: }>, <{City: }>, <{State: }>, <{Zip: }>, <{Description: }>, <{OwnerId: }>, <{AgentId: }>);";
 }
@@ -62,3 +75,4 @@ exports.getPropertyById = getPropertyById;
 exports.deleteProperty = deleteProperty;
 exports.createProperty = createProperty;
 exports.getFeaturesForProperty = getFeaturesForProperty;
+exports.addProperty = addProperty;
