@@ -13,6 +13,16 @@ function getAllListings(success, failure) {
 
 function getListingById(id, success, failure) {
 	var connection = connection_mysql.getConnection;
+
+	// Increment view count
+	var query = "UPDATE `PropertyListing`.`Listing` SET Viewcount = ViewCount + 1 WHERE `ListingID` = ?;"
+	connection.query(query, [ id ], function(err, rows, fields) {
+		if (err) {
+			console.log("error");
+			failure(err);
+		}
+	});
+
 	var queryString = "SELECT ListingID, ListingDateTime, SalePrice, SoldPrice,"
 			+ " Property.PropertyID, Viewcount, SoldDate, Street, City, State, Zip,"
 			+ " Description, Property.Name AS 'PropertyName', AgentProfile.FirstName AS 'AgentFName',"
