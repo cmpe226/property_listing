@@ -2,6 +2,7 @@ var connection_mysql = require('./mysql')
 function getAllListings(success, failure) {
 	var connection = connection_mysql.getConnection;
 	var queryString = 'SELECT ListingID, ListingDateTime, Viewcount, Street, City, State, Zip, Description  FROM PropertyListing.Listing, PropertyListing.Property where Listing.PropertyID = Property.PropertyID;';
+	console.log("Query", queryString);
 	connection.query(queryString, function(err, rows, fields) {
 		if (err) {
 			failure(err);
@@ -16,6 +17,7 @@ function getListingById(id, success, failure) {
 
 	// Increment view count
 	var query = "UPDATE `PropertyListing`.`Listing` SET Viewcount = ViewCount + 1 WHERE `ListingID` = ?;"
+	console.log("Query", query);
 	connection.query(query, [ id ], function(err, rows, fields) {
 		if (err) {
 			console.log("error");
@@ -37,6 +39,7 @@ function getListingById(id, success, failure) {
 			+ "PropertyOwner.OwnerId = Property.OwnerId AND Property.AgentId = RealEstateAgent.AgentId "
 			+ "AND OwnerProfile.ProfileID = PropertyOwner.ProfileID AND "
 			+ "AgentProfile.ProfileID = RealEstateAgent.ProfileID; ";
+	console.log("Query", queryString);
 	connection.query(queryString, [ id ], function(err, rows, fields) {
 		if (err) {
 			console.log("error");
@@ -50,6 +53,7 @@ function getListingById(id, success, failure) {
 function deleteProperty(id, success, failure) {
 	var connection = connection_mysql.getConnection;
 	var queryString = 'DELETE FROM `PropertyListing`.`Property` WHERE PropertyID = ?;';
+	console.log("Query", queryString);
 	connection.query(queryString, [ id ], function(err, rows, fields) {
 		if (err) {
 			failure(err);
@@ -102,6 +106,7 @@ function getListingForIdSet(ids, success, failure) {
 function deleteListing(id, success, failure) {
 	var connection = connection_mysql.getConnection;
 	var queryString = 'DELETE FROM `PropertyListing`.`Listing` WHERE ListingID = ?;';
+	console.log("Query", queryString);
 	connection.query(queryString, [ id ], function(err, rows, fields) {
 		if (err) {
 			failure(err);
