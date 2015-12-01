@@ -129,11 +129,34 @@
 
 	<div align="center">
 		<div>
+			<% if (user.type == 2) { %>
+			<br>
+			<form method='post' action='/deleteProperty'>
+			<input type='hidden' name='propertyId' value=<%= property.PropertyID%>>
+			<input type='hidden' name='agentId' value= <%=property.AgentId%>>
+			<input type="submit" value='Delete Property'>
+			</form>
+			<% } %>
 			<h1><%=property.PropertyName %></h1>
 			<h1>
 				<small><%=property.Street + "," + property.City +"," +
 					property.State + "," + property.Zip %></small>
 			</h1>
+			<h3><small>Property View Count: <%= property.Viewcount %> </small></h3>
+			<h2>Listing Info:</h2>
+			<% if (user.type != 2 && user.type != 3) { %>
+			<form method='post' action='/addBookmark'>
+			<input type='hidden' name='listingId' value=<%= property.ListingID%>>
+			<input type="submit" value='Bookmark Listing'>
+			</form>
+			<% } %>
+			<% if (user.type == 2) { %>
+			<input type="submit" value='Delete Listing'>
+			<% } %>
+			<h3><small>DateTime Listed: <%= property.ListingDateTime %>
+			<br>Sale Price: <%= property.SalePrice %>
+			<br>Sold Price: <%= property.SoldPrice %></small></h3>
+			
 		</div>
 
 		<div class="row">

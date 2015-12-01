@@ -10,3 +10,7 @@ http://localhost:3000/signin
 
 #####Property Detail Page
 http://localhost:3000/listings/15
+
+
+#####Search Page
+http://localhost:3000/search?q=san

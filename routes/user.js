@@ -1,5 +1,7 @@
 var ejs = require('ejs');
 var mysql = require('./user-dao');
+var bkmrk = require('./bookmarks-dao');
+var property = require('./property_dao');
 var ERROR_MESSAGE = {
     "message" : "Error occurred",
     "success" : false,
@@ -242,6 +244,48 @@ function deleteUser(req,res) {
 	});
 }
 
+function addBookmark(req, res){
+	var listingId = req.body.listingId;
+	var userId =  req.session.user.ID;
+	console.log("Bookmark Listing Id: " + listingId + " " + userId);
+	
+	bkmrk.createBookmark(function(err, result){
+		if(!err){
+			console.log(result);
+		}
+		else
+			throw(err);
+	}, listingId, userId);
+	
+	res.redirect('/home');
+}
+
+function deleteProperty(req, res){
+	var propertyId = req.body.propertyId;
+	var agentId = req.body.agentId;
+	var userId =  req.session.user.ID;
+	console.log("Delete Property Id: " + propertyId + " " + userId + " " + agentId);
+	
+	if(agentId == userId){
+	property.deleteProperty(propertyId, function(rows){
+		if(!err){
+			console.log(rows);
+		}
+		else
+			throw(err);
+	}, function(err){
+		console.log(err);
+		throw(err);
+	});
+	}
+	else{
+		//dont allow to delete
+		console.log('Only the Agent that created the property can delete it.')
+	}
+	
+	res.redirect('/home');
+}
+
 
 
 function verifyCreateParameters(req) {
@@ -271,3 +315,5 @@ exports.editProfile=showEditProfile;
 exports.submitEditProfile=submitEditProfile;
 exports.deleteUser=deleteUser;
 exports.logOut=logOut;
+exports.addBookmark=addBookmark;
+exports.deleteProperty=deleteProperty;

@@ -9,7 +9,6 @@ function getAllListings(success, failure) {
 			success(rows);
 		}
 	});
-	connection.end();
 }
 
 function getListingById(id, success, failure) {
@@ -21,20 +20,18 @@ function getListingById(id, success, failure) {
 			+ "AgentProfile.contact AS 'AgentContact', AgentProfile.Photo AS 'AgentPhoto', "
 			+ "OwnerProfile.FirstName AS 'OwnerFName', OwnerProfile.LastName AS 'OwnerLName', "
 			+ "OwnerProfile.Email AS 'OwnerEmail', OwnerProfile.contact AS 'OwnerContact', "
-			+ "OwnerProfile.Photo AS 'OwnerPhoto' FROM PropertyListing.Listing, "
+			+ "OwnerProfile.Photo AS 'OwnerPhoto', Property.AgentId AS 'AgentId' FROM PropertyListing.Listing, "
 			+ "PropertyListing.Property, PropertyListing.PropertyOwner, PropertyListing.RealEstateAgent, "
 			+ "PropertyListing.Profile OwnerProfile, PropertyListing.Profile AgentProfile "
 			+ "WHERE ListingID = ? AND Listing.PropertyID = Property.PropertyID AND "
 			+ "PropertyOwner.OwnerId = Property.OwnerId AND Property.AgentId = RealEstateAgent.AgentId "
 			+ "AND OwnerProfile.ProfileID = PropertyOwner.ProfileID AND "
 			+ "AgentProfile.ProfileID = RealEstateAgent.ProfileID; ";
-	console.log("====>>>" + id);
 	connection.query(queryString, [ id ], function(err, rows, fields) {
 		if (err) {
 			console.log("error");
 			failure(err);
 		} else {
-			console.log("success");
 			success(rows);
 		}
 	});
@@ -52,11 +49,49 @@ function deleteProperty(id, success, failure) {
 	});
 }
 
-function createProperty() {
-	"INSERT INTO `PropertyListing`.`Property` (`PropertyID`, `Street`, `City`, `State`,`Zip`, `Description`, `OwnerId`, `AgentId`) VALUES (<{PropertyID: }>, <{Street: }>, <{City: }>, <{State: }>, <{Zip: }>, <{Description: }>, <{OwnerId: }>, <{AgentId: }>);";
+function getListingByCity(q, success, failure) {
+	var connection = connection_mysql.getConnection;
+	var queryString = 'SELECT  * FROM `PropertyListing`.`unregistereduserview` where `City` like \'%'
+			+ q + '%\';';
+	console.log("Query", queryString);
+	connection.query(queryString, q, function(err, rows, fields) {
+		if (err) {
+			failure(err);
+		} else {
+			success(rows);
+		}
+	});
+}
+
+function getTopListings(success, failure) {
+	var connection = connection_mysql.getConnection;
+	var queryString = 'CALL `PropertyListing`.`TopListing`();';
+	connection.query(queryString, function(err, rows, fields) {
+		if (err) {
+			failure(err);
+		} else {
+			success(rows);
+		}
+	});
+}
+
+function getListingForIdSet(ids, success, failure) {
+	var connection = connection_mysql.getConnection;
+	var idstring = JSON.stringify(ids);
+	var queryString = 'select * from `PropertyListing`.`unregistereduserview` where ListingID In (?) ORDER BY FIELD(ListingID,?);';
+	console.log("Query", queryString);
+	connection.query(queryString, [ ids, ids ], function(err, rows, fields) {
+		if (err) {
+			failure(err);
+		} else {
+			success(rows);
+		}
+	});
 }
 
 exports.getAllListings = getAllListings;
 exports.getListingById = getListingById;
 exports.deleteProperty = deleteProperty;
-exports.createProperty = createProperty;
+exports.getListingByCity = getListingByCity;
+exports.getTopListings = getTopListings;
+exports.getListingForIdSet = getListingForIdSet;
