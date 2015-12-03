@@ -109,7 +109,7 @@ function getUserLoginData(callback,loginData) {
     ') t ' +
 	' where t.Username = ? and t.Password = ?';
 	var connection = mysql.getConnection;
-	connection.query(query,[loginData.UserName,loginData.Password],function(err,results) {
+	connection.query(query,[loginData.Username,loginData.Password],function(err,results) {
 		if(err) {
 			throw err;
 		} else {
@@ -118,10 +118,10 @@ function getUserLoginData(callback,loginData) {
 	});
 }
 
-function getAllUsers(callback) {
-	var query = '';
+function getAllUsers(count,callback) {
+	var query = 'select * from allusers order by id desc limit ' + count;
 	console.log(query);
-	var connection = mysql.getConnection();
+	var connection = mysql.getConnection;
 	connection.query(query,function(err,results) {
 		if(err) {
 			throw err;
@@ -200,7 +200,7 @@ function getBookmarks(userid,callback) {
 		"from Bookmarks b " +
 			"inner join Listing l on b.ListingId = l.ListingID " +
 			"inner join Property p on l.PropertyID = p.PropertyID " +
-		"where b.UserId = 1";
+		"where b.UserId = " + userid;
 	var connection = mysql.getConnection;
 	connection.query(query,[userid],function(err,result) {
 		if(!err) {

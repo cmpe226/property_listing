@@ -74,6 +74,105 @@
                             <!-- Start .panel -->
                             <div class="panel-heading white-bg">
                                 <h4 class="panel-title">Users</h4>
+                                <button type="button" class="btn btn-primary mr5 mb10" data-toggle="modal" data-target="#myModal">Add User</button>
+
+                                <!-- Modal -->
+                                <div id="myModal" class="modal fade" role="dialog">
+                                    <div class="modal-dialog">
+
+                                        <!-- Modal content-->
+                                        <div class="modal-content">
+                                            <div class="modal-header">
+                                                <button type="button" class="close" data-dismiss="modal">&times;</button>
+                                                <h4 class="modal-title">User Add:</h4>
+                                            </div>
+                                            <div class="modal-body">
+                                                <p>Enter User Information:</p>
+                                                <form id="signupform" class="form-horizontal" role="form" action="user" method="POST">
+
+                                                    <div id="signupalert" style="display: none"
+                                                         class="alert alert-danger">
+                                                        <p>Error:</p>
+                                                        <span></span>
+                                                    </div>
+
+
+
+                                                    <div class="form-group">
+                                                        <label for="firstname" class="col-md-3 control-label">First
+                                                            Name</label>
+                                                        <div class="col-md-9">
+                                                            <input type="text" class="form-control" name="firstname"
+                                                                   placeholder="First Name">
+                                                        </div>
+                                                    </div>
+                                                    <div class="form-group">
+                                                        <label for="lastname" class="col-md-3 control-label">Last
+                                                            Name</label>
+                                                        <div class="col-md-9">
+                                                            <input type="text" class="form-control" name="lastname"
+                                                                   placeholder="Last Name">
+                                                        </div>
+                                                    </div>
+
+                                                    <div class="form-group">
+                                                        <label for="username" class="col-md-3 control-label">Username</label>
+                                                        <div class="col-md-9">
+                                                            <input type="text" class="form-control" name="username"
+                                                                   placeholder="User Name">
+                                                        </div>
+                                                    </div>
+
+                                                    <div class="form-group">
+                                                        <label for="password" class="col-md-3 control-label">Password</label>
+                                                        <div class="col-md-9">
+                                                            <input type="password" class="form-control" name="password"
+                                                                   placeholder="Password">
+                                                        </div>
+                                                    </div>
+
+                                                    <div class="form-group">
+                                                        <div class="col-md-3" align="right">
+                                                            <input id="propertyowner" type="checkbox" name="propertyowner">
+                                                        </div>
+                                                        <div class="col-md-9" align="left">
+                                                            <label for="agent">Property Owner</label>
+                                                        </div>
+                                                    </div>
+
+                                                    <div class="form-group">
+                                                        <div class="col-md-3" align="right">
+                                                            <input id="box-license" type="checkbox" name="agent" placeholder="I am an agent"
+                                                                   onclick="$('#license_num').val(''); $('#license_num').toggle();">
+                                                        </div>
+                                                        <div class="col-md-9" align="left">
+                                                            <label for="agent">Agent</label>
+                                                        </div>
+                                                    </div>
+
+                                                    <div class="form-group" id="license_num">
+                                                        <label for="License" class="col-md-3 control-label">License</label>
+                                                        <div class="col-md-9">
+                                                            <input type="text" class="form-control" name="license"
+                                                                   placeholder="License Number">
+                                                        </div>
+                                                    </div>
+                                                    <div class="form-group">
+                                                        <!-- Button -->
+                                                        <div class="col-md-offset-3 col-md-9">
+                                                            <button id="btn-signup" type="button" class="btn btn-info">
+                                                                <i class="icon-hand-right"></i> &nbsp Sign Up
+                                                            </button>
+                                                        </div>
+                                                    </div>
+
+                                                </form>
+                                            </div>
+
+                                        </div>
+
+                                    </div>
+                                </div>
                             </div>
                             <div class="panel-body">
                                 <table class="table">
@@ -93,58 +192,23 @@
                                     </tr>
                                     </thead>
                                     <tbody>
-                                    <tr>
-                                        <td>
-                                            <div class="checkbox-custom">
-                                                <input id="check" class="check" type="checkbox" value="option2">
-                                                <label for="check"></label>
-                                            </div>
-                                        </td>
-                                        <td>Jacob Olsen</td>
-                                        <td>Developer</td>
-                                        <td>2530$</td>
-                                        <td></td>
-                                        <td></td>
-                                    </tr>
-                                    <tr>
-                                        <td>
-                                            <div class="checkbox-custom">
-                                                <input id="check1" class="check" type="checkbox" value="option3">
-                                                <label for="check1"></label>
-                                            </div>
-                                        </td>
-                                        <td>Lara James</td>
-                                        <td>SEO</td>
-                                        <td>3700$</td>
-                                        <td></td>
-                                        <td></td>
-                                    </tr>
-                                    <tr>
-                                        <td>
-                                            <div class="checkbox-custom">
-                                                <input id="check2" class="check" type="checkbox" value="option4">
-                                                <label for="check2"></label>
-                                            </div>
-                                        </td>
-                                        <td>Steve Sidwell</td>
-                                        <td>Photographer</td>
-                                        <td>1340$</td>
-                                        <td></td>
-                                        <td></td>
-                                    </tr>
-                                    <tr>
-                                        <td>
-                                            <div class="checkbox-custom">
-                                                <input id="check3" class="check" type="checkbox" value="option5">
-                                                <label for="check3"></label>
-                                            </div>
-                                        </td>
-                                        <td>Elena Dobrev</td>
-                                        <td>Project manger</td>
-                                        <td>5600$</td>
-                                        <td></td>
-                                        <td></td>
-                                    </tr>
+                                    <%if(locals.users && locals.users.length > 0) {%>
+                                        <% for(var i=0; i<locals.users.length; i++) {%>
+                                            <tr>
+                                                <td>
+                                                    <div class="checkbox-custom">
+                                                        <input id="check" class="check" type="checkbox" value="option2">
+                                                        <label for="check"></label>
+                                                    </div>
+                                                </td>
+                                                <td><%=locals.users[i].id%></td>
+                                                <td><%=locals.users[i].username%></td>
+                                                <td><%=locals.users[i].firstname%></td>
+                                                <td><%=locals.users[i].lastname%></td>
+                                                <td><%=locals.users[i].type%></td>
+                                            </tr>
+                                        <%}%>
+                                    <%}%>
                                     </tbody>
                                 </table>
                             </div>
@@ -172,66 +236,35 @@
                                                 <label for="masterCheck"></label>
                                             </div>
                                         </th>
-                                        <th class="per20">ID</th>
-                                        <th class="per15">Username</th>
-                                        <th class="per15">First Name</th>
-                                        <th class="per15">Last Name</th>
-                                        <th class="per15">User Type</th>
+                                        <th class="per15">ID</th>
+                                        <th class="per15">Listing Date</th>
+                                        <th class="per15">View Count</th>
+                                        <th class="per15">Stree</th>
+                                        <th class="per15">City</th>
+                                        <th class="per15">State</th>
+                                        <th class="per15">Zip</th>
                                     </tr>
                                     </thead>
                                     <tbody>
-                                    <tr>
-                                        <td>
-                                            <div class="checkbox-custom">
-                                                <input id="check" class="check" type="checkbox" value="option2">
-                                                <label for="check"></label>
-                                            </div>
-                                        </td>
-                                        <td>Jacob Olsen</td>
-                                        <td>Developer</td>
-                                        <td>2530$</td>
-                                        <td></td>
-                                        <td></td>
-                                    </tr>
-                                    <tr>
-                                        <td>
-                                            <div class="checkbox-custom">
-                                                <input id="check1" class="check" type="checkbox" value="option3">
-                                                <label for="check1"></label>
-                                            </div>
-                                        </td>
-                                        <td>Lara James</td>
-                                        <td>SEO</td>
-                                        <td>3700$</td>
-                                        <td></td>
-                                        <td></td>
-                                    </tr>
-                                    <tr>
-                                        <td>
-                                            <div class="checkbox-custom">
-                                                <input id="check2" class="check" type="checkbox" value="option4">
-                                                <label for="check2"></label>
-                                            </div>
-                                        </td>
-                                        <td>Steve Sidwell</td>
-                                        <td>Photographer</td>
-                                        <td>1340$</td>
-                                        <td></td>
-                                        <td></td>
-                                    </tr>
-                                    <tr>
-                                        <td>
-                                            <div class="checkbox-custom">
-                                                <input id="check3" class="check" type="checkbox" value="option5">
-                                                <label for="check3"></label>
-                                            </div>
-                                        </td>
-                                        <td>Elena Dobrev</td>
-                                        <td>Project manger</td>
-                                        <td>5600$</td>
-                                        <td></td>
-                                        <td></td>
-                                    </tr>
+                                        <%if(locals.listings && locals.listings.length > 0) {%>
+                                            <% for(var i=0; i<100; i++) {%>
+                                                <tr>
+                                                    <td>
+                                                        <div class="checkbox-custom">
+                                                            <input id="check" class="check" type="checkbox" value="option2">
+                                                            <label for="check"></label>
+                                                        </div>
+                                                    </td>
+                                                    <td><%=locals.listings[i].ListingID%></td>
+                                                    <td><%=locals.listings[i].ListingDateTime%></td>
+                                                    <td><%=locals.listings[i].Viewcount%></td>
+                                                    <td><%=locals.listings[i].Street%></td>
+                                                    <td><%=locals.listings[i].City%></td>
+                                                    <td><%=locals.listings[i].State%></td>
+                                                    <td><%=locals.listings[i].Zip%></td>
+                                                </tr>
+                                            <%}%>
+                                        <%}%>
                                     </tbody>
                                 </table>
                             </div>
@@ -297,5 +330,38 @@
 <script src="console/js/jquery.dynamic.js"></script>
 <script src="console/js/main.js"></script>
 <script src="console/js/pages/tables-basic.js"></script>
+<script>
+
+    $('#btn-signup').click(function(event) {
+            var formData = {
+                firstname : $('input[name=firstname]').val(),
+                lastname : $('input[name=lastname]').val(),
+                username : $('input[name=username]').val(),
+                password : $('input[name=password]').val()
+            };
+
+            $.ajax({
+               type : 'POST',
+                url : '/user',
+                data : formData,
+                encode : true,
+                success : function() {
+                    alert("Account Created!");
+                }
+            });
+            event.preventDefault();
+    });
+
+    $('#propertyowner').change(function() {
+        var checked = $(this).is(':checked');
+        if(checked) {
+            $('#box-license').removeAttr('checked').attr('disabled','disabled');
+            $('#license_num').hide();
+        } else {
+            $('#box-license').removeAttr('disabled');
+        }
+
+    });
+</script>
 </body>
 </html>

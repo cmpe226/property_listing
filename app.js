@@ -55,6 +55,8 @@ conn.connect(function(err) {
 
 // GETS
 app.get('/user/:userid', user.getUserById);
+app.get('/adminConsole',authenticate,pages.showAdminConsole);
+app.get('/allUsers/:count',user.getAllUsers);
 // app.get('/users', user.getAllUsers);
 
 // POSTS
@@ -67,8 +69,10 @@ app.post('/deleteProperty', user.deleteProperty);
 // DELETES
 app.post('/userdelete', authenticate, user.deleteUser);
 app.post('/login', user.login);
+app.post('/adminLogin',user.adminLogin);
 
 app.get('/', pages.signup);
+app.get('/adminLoginPage',pages.adminLoginPage);
 app.get('/propertydetails', authenticate, pages.propertydetails);
 app.get('/listing', authenticate, pages.listing);
 app.get('/addproperty', authenticate, pages.addproperty);
@@ -77,8 +81,9 @@ app.get('/editprofile', authenticate, user.editProfile);
 
 // Do not authenitcate the login page
 app.get('/', pages.signup);
-app.get('/home', pages.getBookmarks,pages.getTopListings, pages.getListingsForIds,
-		pages.showHomePage);
+//app.get('/home', pages.getBookmarks,pages.getTopListings, pages.getListingsForIds,
+//		pages.showHomePage);
+app.get('/home',  pages.getBookmarks,pages.showHomePage);
 app.get('/propertydetails', pages.propertydetails);
 app.get('/listing', pages.listing);
 app.get('/addproperty', authenticate, pages.addproperty);

@@ -83,6 +83,8 @@ exports.getBookmarks = function(req,res,next) {
 			res.locals.bookmarks = bookmarks;
 			return next();
 		});
+	} else {
+		return next();
 	}
 }
 
@@ -171,3 +173,17 @@ function performSearch(req, res) {
 exports.performSearch = performSearch;
 
 // ===================END OF SEARCH========================
+
+exports.showAdminConsole = function(req,res) {
+	if(req.session.user && req.session.user.ID === -1) {
+		userDao.getAllUsers(30,function(err,results) {
+			res.locals.users = results;
+			propertyListingDAO.getAllListings(function(result) {
+				res.locals.listings = result;
+				res.render('adminconsole');
+			});
+		});
+	} else {
+		res.redirect("/home");
+	}
+}

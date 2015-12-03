@@ -2,6 +2,10 @@ var ejs = require('ejs');
 var mysql = require('./user-dao');
 var bkmrk = require('./bookmarks-dao');
 var property = require('./property_dao');
+var bcrypt = require('bcrypt');
+var salt = bcrypt.genSaltSync(10);
+
+
 var ERROR_MESSAGE = {
     "message" : "Error occurred",
     "success" : false,
@@ -11,9 +15,10 @@ var fs = require('fs');
 
 function createUser(req,res) {
 	if(verifyCreateParameters(req) == true) {
+		var hash = bcrypt.hashSync(req.body.password,salt);
 		var newUser = {
 			UserName: req.body.username,
-			Password: req.body.password,
+			Password: hash,
 			FirstName: req.body.firstname,
 			LastName: req.body.lastname
 		};
@@ -78,7 +83,7 @@ function getUserById(req,res) {
 }
 
 function getAllUsers(req,res) {
-	mysql.getAllUsers(function(err,result) {
+	mysql.getAllUsers(req.params.count,function(err,result) {
 		if(err) {
 			throw err;
 		} else {
@@ -86,15 +91,11 @@ function getAllUsers(req,res) {
 			for(var i = 0; i < result.length; i++) {
 				var user = result[i];
 				var userObj = {
-						id: user.user_id,
-						first_name: user.first_name,
-						last_name: user.last_name,
-						address: user.address,
-						city: user.city,
-						state: user.state,
-						zip_codeCode: user.zip_code,
-						phone_number: user.phone_number,
-						email: user.email
+						id: user.id,
+						username: user.username,
+						firstname: user.firstname,
+						lastname: user.lastname,
+						type: user.type
 				};
 				users.push(userObj);
 			}
@@ -105,7 +106,8 @@ function getAllUsers(req,res) {
 
 function login(req,res) {
 	if(verifyLoginParameters(req)) {
-		var loginData = {UserName: req.body.username, Password: req.body.password};
+		var hash = bcrypt.hashSync(req.body.password,salt);
+		var loginData = {Username: req.body.username, Password: hash};
 		mysql.getUserLoginData(function(err,results) {
 			if(err) {
 				throw err;
@@ -142,27 +144,32 @@ function login(req,res) {
 
 function adminLogin(req,res) {
 	if(verifyLoginParameters(req)) {
-		var adminLoginData = {Username: req.body.username, Password: req.body.password};
+		var hash = bcrypt.hashSync(req.body.password,salt);
+		var adminLoginData = {Username: req.body.username, Password: hash};
 		mysql.getUserLoginData(function(err,results) {
-			if(results && results[0].ID === -1) {
+			if(results && results.length > 0 && results[0].ID === -1) {
 				mysql.getUserById(results[0].ID,results[0].Username,results[0].Password, function(err,results2) {
 					if(!err) {
-						req.user = results[0];
-						req.user.type = results2[0].type;
-						req.user.profileid = results2[0].ProfileID;
-						req.session.user = results[0];
-						req.session.user.type = results2[0].type;
-						req.session.user.profileid = results2[0].ProfileID;
-						res.locals.user = results[0];
-						res.location('/');
-						res.redirect("/home");
-
+						if(results2[0].ProfileID === -1) {
+							req.user = results[0];
+							req.user.type = results2[0].type;
+							req.user.profileid = results2[0].ProfileID;
+							req.session.user = results[0];
+							req.session.user.type = results2[0].type;
+							req.session.user.profileid = results2[0].ProfileID;
+							res.locals.user = results[0];
+							res.location('/');
+							res.redirect("/adminconsole");
+						}
+						else {
+							res.render('/adminLoginPage',{showInvalidCredentials:true});
+						}
 					}
 				})
 			}
 		},adminLoginData);
 	} else {
-		res.send(ERROR_MESSAGE);
+		res.render('/adminLoginPage',{showInvalidCredentials:true});
 	}
 }
 
