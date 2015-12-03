@@ -2,6 +2,7 @@ var connection_mysql = require('./mysql')
 function getAllListings(success, failure) {
 	var connection = connection_mysql.getConnection;
 	var queryString = 'SELECT ListingID, ListingDateTime, Viewcount, Street, City, State, Zip, Description  FROM PropertyListing.Listing, PropertyListing.Property where Listing.PropertyID = Property.PropertyID;';
+	console.log("Query", queryString);
 	connection.query(queryString, function(err, rows, fields) {
 		if (err) {
 			failure(err);
@@ -13,6 +14,17 @@ function getAllListings(success, failure) {
 
 function getListingById(id, success, failure) {
 	var connection = connection_mysql.getConnection;
+
+	// Increment view count
+	var query = "UPDATE `PropertyListing`.`Listing` SET Viewcount = ViewCount + 1 WHERE `ListingID` = ?;"
+	console.log("Query", query);
+	connection.query(query, [ id ], function(err, rows, fields) {
+		if (err) {
+			console.log("error");
+			failure(err);
+		}
+	});
+
 	var queryString = "SELECT ListingID, ListingDateTime, SalePrice, SoldPrice,"
 			+ " Property.PropertyID, Viewcount, SoldDate, Street, City, State, Zip,"
 			+ " Description, Property.Name AS 'PropertyName', AgentProfile.FirstName AS 'AgentFName',"
@@ -27,6 +39,7 @@ function getListingById(id, success, failure) {
 			+ "PropertyOwner.OwnerId = Property.OwnerId AND Property.AgentId = RealEstateAgent.AgentId "
 			+ "AND OwnerProfile.ProfileID = PropertyOwner.ProfileID AND "
 			+ "AgentProfile.ProfileID = RealEstateAgent.ProfileID; ";
+	console.log("Query", queryString);
 	connection.query(queryString, [ id ], function(err, rows, fields) {
 		if (err) {
 			console.log("error");
@@ -40,6 +53,7 @@ function getListingById(id, success, failure) {
 function deleteProperty(id, success, failure) {
 	var connection = connection_mysql.getConnection;
 	var queryString = 'DELETE FROM `PropertyListing`.`Property` WHERE PropertyID = ?;';
+	console.log("Query", queryString);
 	connection.query(queryString, [ id ], function(err, rows, fields) {
 		if (err) {
 			failure(err);
@@ -51,7 +65,7 @@ function deleteProperty(id, success, failure) {
 
 function getListingByCity(q, success, failure) {
 	var connection = connection_mysql.getConnection;
-	var queryString = 'SELECT  * FROM `PropertyListing`.`unregistereduserview` where `City` like \'%'
+	var queryString = 'SELECT  * FROM `PropertyListing`.`searchview` where `City` like \'%'
 			+ q + '%\';';
 	console.log("Query", queryString);
 	connection.query(queryString, q, function(err, rows, fields) {
@@ -78,9 +92,22 @@ function getTopListings(success, failure) {
 function getListingForIdSet(ids, success, failure) {
 	var connection = connection_mysql.getConnection;
 	var idstring = JSON.stringify(ids);
-	var queryString = 'select * from `PropertyListing`.`unregistereduserview` where ListingID In (?) ORDER BY FIELD(ListingID,?);';
+	var queryString = 'select * from `PropertyListing`.`searchview` where ListingID In (?) ORDER BY FIELD(ListingID,?);';
 	console.log("Query", queryString);
 	connection.query(queryString, [ ids, ids ], function(err, rows, fields) {
+		if (err) {
+			failure(err);
+		} else {
+			success(rows);
+		}
+	});
+}
+
+function deleteListing(id, success, failure) {
+	var connection = connection_mysql.getConnection;
+	var queryString = 'DELETE FROM `PropertyListing`.`Listing` WHERE ListingID = ?;';
+	console.log("Query", queryString);
+	connection.query(queryString, [ id ], function(err, rows, fields) {
 		if (err) {
 			failure(err);
 		} else {
@@ -95,3 +122,4 @@ exports.deleteProperty = deleteProperty;
 exports.getListingByCity = getListingByCity;
 exports.getTopListings = getTopListings;
 exports.getListingForIdSet = getListingForIdSet;
+exports.deleteListing = deleteListing;

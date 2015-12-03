@@ -8,6 +8,7 @@ var PROFILE_TABLE = 'Profile';
 
 function insertNewRegisteredUser(callback,registereduser) {
 	var query = "INSERT INTO " + REGISTERED_USER_TABLE + " SET ?";
+	console.log("Query", query);
 	var connection = mysql.getConnection;
 	connection.query(query, registereduser, function(err,result) {
 		if(err) {
@@ -21,6 +22,7 @@ function insertNewRegisteredUser(callback,registereduser) {
 
 function insertNewProfile(callback,profiledata) {
 	var query = "INSERT INTO " + PROFILE_TABLE + " SET ?" ;
+	console.log("Query", query);
 	var connection = mysql.getConnection;
 	connection.query(query,profiledata,function(err,result) {
 		if(err) {
@@ -33,6 +35,7 @@ function insertNewProfile(callback,profiledata) {
 
 function insertNewRealEstateAgent(callback,realestateagent) {
 	var query = "INSERT INTO " + REALESTATE_AGENT_TABLE + " SET ?";
+	console.log("Query", query);
 	var connection = mysql.getConnection;
 	connection.query(query,realestateagent,function(err,result) {
 		if(err) {
@@ -47,8 +50,9 @@ function getUserProfileData(email,callback) {
 }
 
 function insertNewRegisteredUserSP(callback,fullUserData) {
-	var query = "CALL usercreations(?,?,?,?)"
+	var query = "CALL usercreations(?,?,?,?)";
 	var connection = mysql.getConnection;
+	console.log("Query", query);
 	connection.query(query,[fullUserData.FirstName,fullUserData.LastName,fullUserData.UserName, fullUserData.Password],function(err,result) {
 		if(err) {
 			throw err;
@@ -59,8 +63,9 @@ function insertNewRegisteredUserSP(callback,fullUserData) {
 }
 
 function insertNewRealEstateAgentSP(callback,fullUserData) {
-	var query = "CALL agentcreations(?,?,?,?,?)"
+	var query = "CALL agentcreations(?,?,?,?,?)";
 	var connection = mysql.getConnection;
+	console.log("Query", query);
 	connection.query(query,[fullUserData.FirstName,fullUserData.LastName,fullUserData.LicenseNumber,fullUserData.UserName, fullUserData.Password],function(err,result) {
 		if(err) {
 			throw err;
@@ -71,8 +76,9 @@ function insertNewRealEstateAgentSP(callback,fullUserData) {
 }
 
 function insertNewPropertyOwnerSP(callback,fullUserData) {
-	var query = "CALL propertyownercreation(?,?,?,?)"
+	var query = "CALL propertyownercreation(?,?,?,?)";
 	var connection = mysql.getConnection;
+	console.log("Query", query);
 	connection.query(query,[fullUserData.FirstName,fullUserData.LastName,fullUserData.UserName, fullUserData.Password],function(err,result) {
 		if(err) {
 			throw err;
@@ -84,6 +90,7 @@ function insertNewPropertyOwnerSP(callback,fullUserData) {
 
 function getUserById(id,username,password,callback) {
 	var query = "select * from allusers where id = ? and username = ? and password = ?";
+	console.log("Query", query);
 	var connection = mysql.getConnection;
 
 	connection.query(query,[id,username,password],function(err,results) {
@@ -108,6 +115,7 @@ function getUserLoginData(callback,loginData) {
 	' from PropertyListing.PropertyOwner ' +
     ') t ' +
 	' where t.Username = ? and t.Password = ?';
+	console.log("Query", query);
 	var connection = mysql.getConnection;
 	connection.query(query,[loginData.Username,loginData.Password],function(err,results) {
 		if(err) {
@@ -201,6 +209,8 @@ function getBookmarks(userid,callback) {
 			"inner join Listing l on b.ListingId = l.ListingID " +
 			"inner join Property p on l.PropertyID = p.PropertyID " +
 		"where b.UserId = " + userid;
+		"where b.UserId = 1";
+	console.log("Query", query);
 	var connection = mysql.getConnection;
 	connection.query(query,[userid],function(err,result) {
 		if(!err) {

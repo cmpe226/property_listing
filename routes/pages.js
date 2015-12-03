@@ -33,7 +33,7 @@ exports.listing = function(req, res) {
 };
 
 exports.addproperty = function(req, res) {
-	res.render('addproperty.html', {
+	res.render('addproperty', {
 		title : 'Express'
 	});
 };

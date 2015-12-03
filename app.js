@@ -55,16 +55,18 @@ conn.connect(function(err) {
 
 // GETS
 app.get('/user/:userid', user.getUserById);
-app.get('/adminConsole',authenticate,pages.showAdminConsole);
-app.get('/allUsers/:count',user.getAllUsers);
 // app.get('/users', user.getAllUsers);
 
 // POSTS
 app.post('/user', user.createUser);
-app.post('/doAddProperty', controller.doAddProperty);
+app.post('/doAddProperty', controller.doAddProperty,
+		controller.showPropertiesForAgent);
 app.post('/submitEditProfile', user.submitEditProfile);
 app.post('/addBookmark', user.addBookmark);
 app.post('/deleteProperty', user.deleteProperty);
+app.post('/createListing', controller.addListing);
+app.post('/addListing', controller.showAddListing);
+app.post('/deleteListing', controller.deleteListing);
 
 // DELETES
 app.post('/userdelete', authenticate, user.deleteUser);
@@ -81,9 +83,8 @@ app.get('/editprofile', authenticate, user.editProfile);
 
 // Do not authenitcate the login page
 app.get('/', pages.signup);
-//app.get('/home', pages.getBookmarks,pages.getTopListings, pages.getListingsForIds,
-//		pages.showHomePage);
-app.get('/home',  pages.getBookmarks,pages.showHomePage);
+app.get('/home', pages.getBookmarks, pages.getTopListings,
+		pages.getListingsForIds, pages.showHomePage);
 app.get('/propertydetails', pages.propertydetails);
 app.get('/listing', pages.listing);
 app.get('/addproperty', authenticate, pages.addproperty);
@@ -95,8 +96,8 @@ app.get('/listings/:id', pages.getPropertyListingById,
 		pages.getPropertyFeatures, pages.renderPropertyDetails);
 app.get('/search', pages.performSearch);
 
-
-//CHANGE THIS TO TRUE WHEN WE DEMO! - This does the authentication
+app.get('/showProperties', controller.showPropertiesForAgent);
+// CHANGE THIS TO TRUE WHEN WE DEMO! - This does the authentication
 var DEVMODE = false;
 function authenticate(req,res,next) {
 	if (req.session.user || DEVMODE) {
