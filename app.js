@@ -72,6 +72,9 @@ app.post('/deleteListing', controller.deleteListing);
 app.post('/userdelete', authenticate, user.deleteUser);
 app.post('/login', user.login);
 app.post('/adminLogin',user.adminLogin);
+app.get('/adminConsole',authenticate,pages.showAdminConsole);
+app.get('/allUsers/:count',user.getAllUsers);
+
 
 app.get('/', pages.signup);
 app.get('/adminLoginPage',pages.adminLoginPage);

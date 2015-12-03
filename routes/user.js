@@ -3,7 +3,7 @@ var mysql = require('./user-dao');
 var bkmrk = require('./bookmarks-dao');
 var property = require('./property_dao');
 var bcrypt = require('bcrypt');
-var salt = bcrypt.genSaltSync(10);
+var salt = '$2a$10$LaqutTEFimAp5thC/NjlK.';
 
 
 var ERROR_MESSAGE = {
